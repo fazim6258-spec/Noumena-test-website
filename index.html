@@ -3,849 +3,1037 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Noumena — AI-Powered Property Management</title>
+  <title>Noumena — Property Management Platform</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
 
   <style>
-    /* ─── Reset & Base ─────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    /* ── Variables ─────────────────────────────────────────────── */
     :root {
-      --bg-deep:    #070b17;
-      --bg-mid:     #0c1120;
-      --bg-card:    #111827;
-      --bg-card2:   #0f172a;
-      --teal:       #12c9a8;
-      --teal-dim:   #0fa88c;
-      --teal-glow:  rgba(18, 201, 168, 0.18);
-      --teal-subtle:rgba(18, 201, 168, 0.06);
-      --blue-logo:  #7ab4d4;
-      --white:      #ffffff;
-      --gray-100:   #f1f5f9;
-      --gray-400:   #94a3b8;
-      --gray-500:   #64748b;
-      --border:     rgba(255,255,255,0.06);
-      --border-teal:rgba(18, 201, 168, 0.25);
-      --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-sans:  'Inter', system-ui, sans-serif;
-      --radius:     12px;
-      --radius-lg:  20px;
+      --bg:          #06050E;
+      --bg-1:        #0A0917;
+      --bg-2:        #0E0C1E;
+      --bg-3:        #141126;
+      --line:        rgba(139,92,246,0.09);
+      --line-md:     rgba(139,92,246,0.18);
+      --text:        #EDEAEA;
+      --text-2:      #7A7692;
+      --text-3:      #423F58;
+      --accent:      #8B5CF6;
+      --accent-10:   rgba(139,92,246,0.10);
+      --accent-20:   rgba(139,92,246,0.22);
+      --accent-hover:#A78BFA;
+      --font:        'Inter', system-ui, sans-serif;
+      --serif:       'Playfair Display', Georgia, serif;
+      --r:           6px;
+      --r-md:        10px;
+      --r-lg:        16px;
+      --max:         1120px;
     }
 
+    /* ── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-
     body {
-      background: var(--bg-deep);
-      color: var(--white);
-      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.65;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
-
     a { color: inherit; text-decoration: none; }
     img { display: block; max-width: 100%; }
+    button { font-family: inherit; cursor: pointer; }
+    input, select { font-family: inherit; }
 
-    /* ─── Utility ──────────────────────────────────────────── */
-    .container {
-      width: min(1160px, 100% - 48px);
+    /* ── Layout ────────────────────────────────────────────────── */
+    .wrap {
+      width: min(var(--max), 100% - 48px);
       margin-inline: auto;
     }
+    .section { padding: 112px 0; }
+    .section--alt { background: var(--bg-1); }
 
-    .section { padding: 100px 0; }
-    .section--alt { background: var(--bg-mid); }
-
-    .tag {
-      display: inline-block;
-      font-size: 11px;
+    /* ── Typography ────────────────────────────────────────────── */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
       font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--teal);
-      background: var(--teal-subtle);
-      border: 1px solid var(--border-teal);
-      border-radius: 100px;
-      padding: 5px 14px;
-      margin-bottom: 20px;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.6;
     }
 
-    .section-heading {
-      font-family: var(--font-serif);
-      font-size: clamp(2rem, 4vw, 3rem);
+    .display {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
       font-weight: 600;
-      line-height: 1.15;
-      color: var(--white);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .display em { font-style: italic; color: var(--accent); }
+
+    .h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
     }
 
-    .section-sub {
-      color: var(--gray-400);
+    .lead {
       font-size: 1.05rem;
-      max-width: 540px;
-      margin-top: 14px;
+      color: var(--text-2);
+      line-height: 1.75;
+      max-width: 520px;
     }
 
-    .section-header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
+    .section-head { margin-bottom: 72px; }
+    .section-head--center { text-align: center; }
+    .section-head--center .lead { margin-inline: auto; }
 
-    .section-header .section-sub { margin-inline: auto; }
-
+    /* ── Buttons ───────────────────────────────────────────────── */
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 14px 30px;
-      border-radius: 8px;
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
+      padding: 13px 26px;
+      font-size: 0.88rem;
       font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: all 0.22s ease;
+      border-radius: var(--r-md);
+      border: 1px solid transparent;
+      transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.15s, box-shadow 0.18s;
+      white-space: nowrap;
     }
-
     .btn-primary {
-      background: var(--teal);
-      color: var(--bg-deep);
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
     }
     .btn-primary:hover {
-      background: #18e0bd;
-      box-shadow: 0 0 24px rgba(18,201,168,0.45);
+      background: var(--accent-hover);
+      box-shadow: 0 0 0 4px var(--accent-10);
       transform: translateY(-1px);
     }
-
     .btn-ghost {
       background: transparent;
-      color: var(--white);
-      border: 1px solid var(--border);
+      color: var(--text-2);
+      border-color: var(--line-md);
     }
     .btn-ghost:hover {
-      border-color: var(--teal);
-      color: var(--teal);
+      color: var(--text);
+      border-color: var(--line-md);
+      background: rgba(255,255,255,0.04);
     }
+    .btn svg { flex-shrink: 0; }
 
-    /* ─── Noise Overlay ────────────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.022;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* ─── Nav ──────────────────────────────────────────────── */
+    /* ── Nav ───────────────────────────────────────────────────── */
     .nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 18px 0;
+      z-index: 200;
+      padding: 20px 0;
       transition: background 0.3s, border-color 0.3s;
       border-bottom: 1px solid transparent;
     }
-
     .nav.scrolled {
-      background: rgba(7, 11, 23, 0.88);
-      backdrop-filter: blur(16px);
-      border-color: var(--border);
+      background: rgba(7,8,15,0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-color: var(--line);
     }
-
     .nav__inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 24px;
     }
 
-    .nav__logo {
+    /* Logo */
+    .logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
+      flex-shrink: 0;
     }
-
-    .nav__wordmark {
-      font-family: var(--font-serif);
-      font-size: 1.45rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      color: var(--white);
+    .logo-mark {
+      width: 22px;
+      height: 26px;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .logo-word {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--text);
+      text-transform: uppercase;
     }
 
     .nav__links {
       display: flex;
       align-items: center;
-      gap: 36px;
+      gap: 32px;
       list-style: none;
     }
-
     .nav__links a {
-      font-size: 0.875rem;
-      color: var(--gray-400);
-      transition: color 0.2s;
+      font-size: 0.85rem;
+      color: var(--text-2);
+      transition: color 0.18s;
+      position: relative;
+    }
+    .nav__links a:hover { color: var(--text); }
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0;
+      height: 1px;
+      width: 0;
+      background: var(--accent);
+      transition: width 0.22s ease;
+    }
+    .nav__links a:hover::after { width: 100%; }
+
+    .nav__actions { display: flex; gap: 10px; align-items: center; }
+
+    /* Mobile menu toggle */
+    .nav__burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+    }
+    .nav__burger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--text-2);
+      transition: all 0.22s;
     }
 
-    .nav__links a:hover { color: var(--white); }
-
-    .nav__cta { display: flex; gap: 12px; align-items: center; }
-
-    /* ─── Hero ─────────────────────────────────────────────── */
+    /* ── Hero ──────────────────────────────────────────────────── */
     .hero {
-      position: relative;
-      min-height: 100vh;
+      min-height: 100svh;
       display: flex;
       align-items: center;
-      padding-top: 80px;
+      padding-top: 88px;
+      position: relative;
       overflow: hidden;
     }
-
-    /* Aurora-style background */
-    .hero__bg {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(18,201,168,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(96,96,220,0.14) 0%, transparent 50%),
-        radial-gradient(ellipse 50% 70% at 15% 60%, rgba(18,201,168,0.08) 0%, transparent 60%),
-        var(--bg-deep);
-    }
-
-    /* Animated orbs */
-    .hero__orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      animation: drift 18s ease-in-out infinite alternate;
-    }
-
-    .hero__orb--1 {
-      width: 600px; height: 600px;
-      top: -180px; left: 55%;
-      background: radial-gradient(circle, rgba(18,201,168,0.22) 0%, transparent 70%);
-      animation-duration: 22s;
-    }
-
-    .hero__orb--2 {
-      width: 500px; height: 400px;
-      top: 30%; left: -100px;
-      background: radial-gradient(circle, rgba(90,80,220,0.16) 0%, transparent 70%);
-      animation-duration: 26s;
-      animation-delay: -8s;
-    }
-
-    .hero__orb--3 {
-      width: 400px; height: 400px;
-      bottom: -100px; right: 10%;
-      background: radial-gradient(circle, rgba(18,201,168,0.12) 0%, transparent 70%);
-      animation-duration: 20s;
-      animation-delay: -4s;
-    }
-
-    @keyframes drift {
-      from { transform: translate(0, 0) scale(1); }
-      to   { transform: translate(40px, 30px) scale(1.08); }
-    }
-
-    /* ─── Northern Lights Aurora Bands ─────────────────────── */
-    .aurora-band {
-      position: absolute;
-      width: 240%;
-      left: -70%;
-      pointer-events: none;
-      border-radius: 50%;
-      filter: blur(52px);
-    }
-    .aurora-band--1 {
-      height: 260px;
-      top: 4%;
-      background: linear-gradient(180deg,
-        rgba(18,201,168,0.32) 0%,
-        rgba(18,201,168,0.08) 60%,
-        transparent 100%);
-      animation: auroraWave1 18s ease-in-out infinite alternate;
-    }
-    .aurora-band--2 {
-      height: 200px;
-      top: 16%;
-      background: linear-gradient(180deg,
-        rgba(100,60,220,0.26) 0%,
-        rgba(18,201,168,0.06) 60%,
-        transparent 100%);
-      animation: auroraWave2 24s ease-in-out infinite alternate;
-      animation-delay: -8s;
-    }
-    .aurora-band--3 {
-      height: 160px;
-      top: 30%;
-      background: linear-gradient(180deg,
-        rgba(18,201,168,0.18) 0%,
-        rgba(60,180,200,0.05) 60%,
-        transparent 100%);
-      animation: auroraWave1 30s ease-in-out infinite alternate;
-      animation-delay: -15s;
-    }
-    @keyframes auroraWave1 {
-      0%   { transform: translateX(0%)   translateY(0)    scaleY(1)    skewX(-8deg); opacity: 0.55; }
-      20%  { transform: translateX(4%)   translateY(18px) scaleY(1.25) skewX(-2deg); opacity: 1;    }
-      50%  { transform: translateX(9%)   translateY(-12px) scaleY(0.85) skewX(7deg); opacity: 0.7;  }
-      75%  { transform: translateX(3%)   translateY(22px) scaleY(1.2)  skewX(2deg); opacity: 0.95;  }
-      100% { transform: translateX(-3%)  translateY(6px)  scaleY(1.08) skewX(-5deg); opacity: 0.6;  }
-    }
-    @keyframes auroraWave2 {
-      0%   { transform: translateX(0%)   scaleY(1)    skewX(6deg);  opacity: 0.45; }
-      30%  { transform: translateX(-5%)  scaleY(1.35) skewX(-8deg); opacity: 0.88; }
-      65%  { transform: translateX(7%)   scaleY(0.75) skewX(9deg);  opacity: 0.65; }
-      100% { transform: translateX(-2%)  scaleY(1.15) skewX(-4deg); opacity: 0.5;  }
-    }
-
-    /* Grid lines decoration */
-    .hero__grid {
+    .hero__grid-bg {
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 80%);
-    }
-
-    .hero__content {
-      position: relative;
-      z-index: 2;
-      max-width: 760px;
-    }
-
-    .hero__eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--teal);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-      padding: 6px 16px 6px 10px;
-      background: var(--teal-subtle);
-      border: 1px solid var(--border-teal);
-      border-radius: 100px;
-    }
-
-    .hero__eyebrow-dot {
-      width: 6px; height: 6px;
-      background: var(--teal);
-      border-radius: 50%;
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.7); }
-    }
-
-    .hero__headline {
-      font-family: var(--font-serif);
-      font-size: clamp(3rem, 7vw, 5.5rem);
-      font-weight: 600;
-      line-height: 1.05;
-      letter-spacing: -0.01em;
-      color: var(--white);
-      margin-bottom: 24px;
-    }
-
-    .hero__headline em {
-      font-style: italic;
-      color: var(--teal);
-    }
-
-    .hero__sub {
-      font-size: 1.15rem;
-      color: var(--gray-400);
-      max-width: 520px;
-      margin-bottom: 40px;
-      line-height: 1.7;
-    }
-
-    .hero__actions { display: flex; gap: 16px; flex-wrap: wrap; }
-
-    .hero__scroll {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: var(--gray-500);
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      z-index: 2;
-      animation: scrollBounce 2.5s ease-in-out infinite;
-    }
-
-    @keyframes scrollBounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* ─── Pain Points ──────────────────────────────────────── */
-    .pain-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 24px;
-    }
-
-    .pain-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px 28px;
-      transition: border-color 0.25s, transform 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .pain-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--teal), transparent);
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-
-    .pain-card:hover { border-color: var(--border-teal); transform: translateY(-4px); }
-    .pain-card:hover::before { opacity: 1; }
-
-    .pain-card__icon {
-      width: 48px; height: 48px;
-      background: var(--teal-subtle);
-      border: 1px solid var(--border-teal);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-      font-size: 1.4rem;
-    }
-
-    .pain-card__title {
-      font-family: var(--font-serif);
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .pain-card__text { color: var(--gray-400); font-size: 0.92rem; line-height: 1.65; }
-
-    /* ─── How It Works ─────────────────────────────────────── */
-    .steps {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr auto 1fr;
-      align-items: center;
-      gap: 0;
-    }
-
-    .step {
-      text-align: center;
-      padding: 0 24px;
-    }
-
-    .step__number {
-      width: 60px; height: 60px;
-      border-radius: 50%;
-      background: var(--teal-subtle);
-      border: 2px solid var(--teal);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 20px;
-      font-family: var(--font-serif);
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--teal);
-      position: relative;
-    }
-
-    .step__icon {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: var(--teal-glow);
-      border: 1px solid var(--border-teal);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 24px;
-      font-size: 2rem;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-
-    .step:hover .step__icon {
-      transform: scale(1.08);
-      box-shadow: 0 0 32px var(--teal-glow);
-    }
-
-    .step__title {
-      font-family: var(--font-serif);
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .step__text { color: var(--gray-400); font-size: 0.9rem; }
-
-    .step-arrow {
-      color: var(--teal);
-      font-size: 1.6rem;
-      opacity: 0.5;
-      flex-shrink: 0;
-    }
-
-    /* ─── Features ─────────────────────────────────────────── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-
-    .feature-card {
-      background: var(--bg-card2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      transition: all 0.25s;
-    }
-
-    .feature-card:hover {
-      border-color: var(--border-teal);
-      background: var(--bg-card);
-      transform: translateY(-3px);
-    }
-
-    .feature-card__icon {
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .feature-card__title {
-      font-family: var(--font-serif);
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--white);
-    }
-
-    .feature-card__text { color: var(--gray-400); font-size: 0.88rem; line-height: 1.65; }
-
-    /* ─── Social Proof ─────────────────────────────────────── */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      margin-bottom: 64px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-
-    .stat {
-      padding: 40px 32px;
-      text-align: center;
-      background: var(--bg-card);
-      border-right: 1px solid var(--border);
-    }
-
-    .stat:last-child { border-right: none; }
-
-    .stat__value {
-      font-family: var(--font-serif);
-      font-size: 3rem;
-      font-weight: 700;
-      color: var(--teal);
-      display: block;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .stat__label { color: var(--gray-400); font-size: 0.88rem; }
-
-    .testimonials {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-
-    .testimonial {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-      position: relative;
-    }
-
-    .testimonial::before {
-      content: '\201C';
-      position: absolute;
-      top: 20px; right: 28px;
-      font-family: var(--font-serif);
-      font-size: 5rem;
-      line-height: 1;
-      color: var(--teal);
-      opacity: 0.2;
-    }
-
-    .testimonial__quote {
-      font-family: var(--font-serif);
-      font-size: 1.05rem;
-      font-style: italic;
-      color: var(--gray-100);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-
-    .testimonial__author {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .testimonial__avatar {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      background: var(--teal-glow);
-      border: 1px solid var(--border-teal);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-    }
-
-    .testimonial__name {
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .testimonial__role { color: var(--gray-400); font-size: 0.8rem; }
-
-    /* ─── Services / Pricing Tiers ────────────────────────── */
-    .pricing-tiers {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      align-items: stretch;
-    }
-
-    .tier-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px 32px 36px;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-    }
-
-    .tier-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 10%; right: 10%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--teal), transparent);
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-
-    .tier-card:hover {
-      border-color: var(--border-teal);
-      transform: translateY(-6px);
-      box-shadow: 0 32px 64px rgba(0,0,0,0.4);
-    }
-
-    .tier-card:hover::before { opacity: 1; }
-
-    .tier-card--featured {
-      background: var(--bg-card2);
-      border-color: var(--border-teal);
-      box-shadow: 0 0 0 1px rgba(18,201,168,0.1), 0 24px 60px rgba(0,0,0,0.45);
-    }
-
-    .tier-card--featured::before { opacity: 1; }
-
-    .tier-card--featured::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 70% 35% at 50% 0%, rgba(18,201,168,0.09) 0%, transparent 70%);
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 75% 75% at 50% 40%, black 10%, transparent 80%);
       pointer-events: none;
     }
-
-    .tier-pill {
-      display: inline-block;
-      font-size: 0.7rem;
+    .hero__glow {
+      position: absolute;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-20%);
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.22) 0%, rgba(100,60,220,0.08) 50%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero__glow-2 {
+      position: absolute;
+      bottom: -60px;
+      left: -80px;
+      width: 420px;
+      height: 380px;
+      background: radial-gradient(ellipse at 40% 60%, rgba(120,60,240,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero__inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 64px;
+    }
+    .hero__copy { flex: 1; max-width: 600px; }
+    .hero__cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .hero__trust {
+      margin-top: 52px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .hero__trust-line {
+      width: 1px;
+      height: 32px;
+      background: var(--line-md);
+    }
+    .hero__trust-stat strong {
+      display: block;
+      font-size: 1.2rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 100px;
-      margin-bottom: 20px;
-      align-self: flex-start;
-      color: var(--gray-400);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--border);
-    }
-
-    .tier-pill--featured {
-      color: var(--teal);
-      background: var(--teal-subtle);
-      border-color: var(--border-teal);
-    }
-
-    .tier-name {
-      font-family: var(--font-serif);
-      font-size: clamp(1.6rem, 2.5vw, 2rem);
-      font-weight: 600;
-      color: var(--white);
-      margin-bottom: 8px;
+      color: var(--text);
       line-height: 1.1;
     }
-
-    .tier-tagline {
-      color: var(--teal);
-      font-size: 0.85rem;
-      font-weight: 500;
-      margin-bottom: 28px;
+    .hero__trust-stat span {
+      font-size: 0.75rem;
+      color: var(--text-2);
     }
 
-    .tier-features {
-      list-style: none;
+    /* ── Hero Dashboard Mockup ────────────────────────────────── */
+    .hero__visual {
+      flex: 0 0 420px;
+      animation: floatIn 1s cubic-bezier(0.22,1,0.36,1) 0.5s both;
+    }
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .dash {
+      background: var(--bg-2);
+      border: 1px solid var(--line-md);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+      animation: dashFloat 8s ease-in-out infinite alternate;
+    }
+    @keyframes dashFloat {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-10px); }
+    }
+    .dash-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--line);
+    }
+    .dash-dots { display: flex; gap: 5px; }
+    .dash-dots i {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: block;
+    }
+    .dash-dots i:nth-child(1) { background: rgba(255,90,90,0.45); }
+    .dash-dots i:nth-child(2) { background: rgba(255,185,0,0.45); }
+    .dash-dots i:nth-child(3) { background: rgba(139,92,246,0.45); }
+    .dash-title {
       flex: 1;
-      margin-bottom: 32px;
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .dash-live {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+    }
+    .dash-live-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .dash-body { padding: 16px; }
+    .dash-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 12px;
+    }
+    .dash-props { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+    .dash-prop {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.78rem;
+    }
+    .dash-prop-name { flex: 1; color: var(--text-2); }
+    .dash-bar-wrap { width: 90px; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+    .dash-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 1s ease; }
+    .dash-pct { font-size: 0.7rem; color: var(--text-2); width: 28px; text-align: right; }
+    .dash-divider { height: 1px; background: var(--line); margin: 14px 0; }
+    .dash-metrics { display: flex; gap: 2px; }
+    .dash-metric {
+      flex: 1;
+      text-align: center;
+      padding: 10px 4px;
+      background: rgba(255,255,255,0.02);
+      border-radius: var(--r);
+    }
+    .dash-metric strong {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .dash-metric span { font-size: 0.6rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+    .dash-activity { margin-top: 14px; }
+    .dash-act-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--r);
+      font-size: 0.72rem;
+      color: var(--text-2);
+      margin-bottom: 4px;
+      border: 1px solid transparent;
+    }
+    .dash-act-item--done {
+      background: rgba(139,92,246,0.04);
+      border-color: rgba(139,92,246,0.12);
+    }
+    .dash-act-item--pending {
+      background: rgba(255,255,255,0.02);
+    }
+    .dash-act-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dash-act-dot--done { background: var(--accent); }
+    .dash-act-dot--pending { background: var(--text-3); }
+    .dash-act-time { margin-left: auto; font-size: 0.62rem; color: var(--text-3); flex-shrink: 0; }
+
+    /* ── Marquee ───────────────────────────────────────────────── */
+    .marquee {
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-1);
+      padding: 14px 0;
+      position: relative;
+    }
+    .marquee::before, .marquee::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .marquee::before { left: 0; background: linear-gradient(90deg, var(--bg-1), transparent); }
+    .marquee::after  { right: 0; background: linear-gradient(270deg, var(--bg-1), transparent); }
+    .marquee__track {
+      display: flex;
+      width: max-content;
+      animation: marqueeRoll 38s linear infinite;
+    }
+    .marquee__track:hover { animation-play-state: paused; }
+    .marquee__inner {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding-right: 28px;
+      white-space: nowrap;
+    }
+    .marquee__item {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+    .marquee__sep { color: var(--accent); opacity: 0.35; font-size: 0.5rem; }
+    @keyframes marqueeRoll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
-    .tier-features li {
+    /* ── Problems ──────────────────────────────────────────────── */
+    .problems-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .problem-cell {
+      background: var(--bg-1);
+      padding: 40px 36px;
+      transition: background 0.2s;
+    }
+    .problem-cell:hover { background: var(--bg-2); }
+    .problem-cell__num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      margin-bottom: 18px;
+    }
+    .problem-cell__title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .problem-cell__text { font-size: 0.88rem; color: var(--text-2); line-height: 1.7; }
+
+    /* ── Steps ─────────────────────────────────────────────────── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 64px;
+    }
+    .step { position: relative; }
+    .step__num {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step__num::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line-md);
+    }
+    .step__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .step__text { font-size: 0.88rem; color: var(--text-2); line-height: 1.7; }
+
+    /* ── Features ──────────────────────────────────────────────── */
+    .features-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .feat {
+      background: var(--bg-1);
+      padding: 36px 32px;
+      transition: background 0.2s;
+    }
+    .feat:hover { background: var(--bg-2); }
+    .feat--wide { grid-column: 1 / -1; }
+    .feat__icon {
+      width: 36px; height: 36px;
+      border: 1px solid var(--line-md);
+      border-radius: var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--accent);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .feat:hover .feat__icon {
+      border-color: var(--accent-20);
+      background: var(--accent-10);
+    }
+    .feat__title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .feat__text { font-size: 0.875rem; color: var(--text-2); line-height: 1.7; }
+
+    /* ── Stats ─────────────────────────────────────────────────── */
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 64px; }
+    .stat { background: var(--bg-2); padding: 40px 36px; text-align: center; }
+    .stat__val {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat__label { font-size: 0.85rem; color: var(--text-2); }
+
+    /* ── Testimonials ───────────────────────────────────────────── */
+    .testimonials { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .testimonial {
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 32px;
+      transition: border-color 0.22s, transform 0.22s;
+    }
+    .testimonial:hover { border-color: var(--line-md); transform: translateY(-3px); }
+    .testimonial__quote {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .testimonial__quote::before { content: '\201C'; color: var(--accent); font-size: 1.2em; margin-right: 2px; }
+    .testimonial__author { display: flex; align-items: center; gap: 12px; }
+    .testimonial__avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--bg-3);
+      border: 1px solid var(--line-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-2);
+      flex-shrink: 0;
+    }
+    .testimonial__name { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+    .testimonial__role { font-size: 0.78rem; color: var(--text-2); margin-top: 2px; }
+
+    /* ── Services / Pricing ─────────────────────────────────────── */
+    .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .tier {
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 36px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: border-color 0.22s, transform 0.22s;
+    }
+    .tier:hover { border-color: var(--line-md); transform: translateY(-4px); }
+    .tier--featured {
+      border-color: var(--accent-20);
+      background: var(--bg-3);
+    }
+    .tier--featured:hover { border-color: rgba(139,92,246,0.35); }
+    .tier__badge {
+      display: inline-block;
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 18px;
+      align-self: flex-start;
+      background: rgba(255,255,255,0.04);
+      color: var(--text-3);
+      border: 1px solid var(--line);
+    }
+    .tier--featured .tier__badge {
+      background: var(--accent-10);
+      color: var(--accent);
+      border-color: var(--accent-20);
+    }
+    .tier__name {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .tier__sub { font-size: 0.82rem; color: var(--accent); margin-bottom: 24px; font-weight: 500; }
+    .tier__divider { height: 1px; background: var(--line); margin-bottom: 24px; }
+    .tier__features { list-style: none; flex: 1; margin-bottom: 28px; }
+    .tier__features li {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      font-size: 0.88rem;
-      color: var(--gray-400);
-      padding: 7px 0;
-      border-bottom: 1px solid var(--border);
-      line-height: 1.4;
+      font-size: 0.85rem;
+      color: var(--text-2);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      line-height: 1.5;
     }
-
-    .tier-features li:last-child { border-bottom: none; }
-
-    .tier-features li::before {
+    .tier__features li:last-child { border-bottom: none; }
+    .tier__features li::before {
       content: '';
       flex-shrink: 0;
-      width: 16px; height: 16px;
+      width: 14px; height: 14px;
       margin-top: 1px;
-      border-radius: 50%;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8' cy='8' r='7.5' stroke='%2312c9a8' stroke-opacity='0.35'/%3E%3Cpath d='M5 8l2 2 4-4' stroke='%2312c9a8' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='7' cy='7' r='6.5' stroke='%238B5CF6' stroke-opacity='0.3'/%3E%3Cpath d='M4.5 7l1.8 1.8L9.5 5.5' stroke='%238B5CF6' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
     }
-
-    .tier-features li.tier-inherit {
-      color: var(--gray-500);
-      font-style: italic;
+    .tier__features li.inherit { color: var(--text-3); font-style: italic; }
+    .tier__features li.inherit::before {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='7' cy='7' r='6.5' stroke='%233E3E52' stroke-opacity='0.6'/%3E%3Cpath d='M4.5 7l1.8 1.8L9.5 5.5' stroke='%233E3E52' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     }
-
-    .tier-features li.tier-inherit::before {
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8' cy='8' r='7.5' stroke='%2364748b' stroke-opacity='0.5'/%3E%3Cpath d='M5 8l2 2 4-4' stroke='%2364748b' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    }
-
-    .tier-cta {
+    .tier__cta {
       display: block;
       text-align: center;
-      padding: 13px 24px;
-      border-radius: 8px;
-      font-size: 0.9rem;
+      padding: 12px 20px;
+      border-radius: var(--r-md);
+      font-size: 0.875rem;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.22s ease;
-      border: 1px solid var(--border);
-      color: var(--gray-400);
+      border: 1px solid var(--line-md);
+      color: var(--text-2);
       background: transparent;
+      transition: all 0.18s;
     }
-
-    .tier-cta:hover {
-      border-color: var(--teal);
-      color: var(--teal);
+    .tier__cta:hover { border-color: var(--accent-20); color: var(--accent); background: var(--accent-10); }
+    .tier__cta--primary {
+      background: var(--accent);
+      color: #FFFFFF;
+      border-color: var(--accent);
     }
+    .tier__cta--primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #FFFFFF; box-shadow: 0 0 0 4px var(--accent-10); }
 
-    .tier-cta--primary {
-      background: var(--teal);
-      color: var(--bg-deep);
-      border-color: var(--teal);
+    /* ── Invoice App ────────────────────────────────────────────── */
+    .invoice-app {
+      background: var(--bg-1);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
-
-    .tier-cta--primary:hover {
-      background: #18e0bd;
-      color: var(--bg-deep);
-      box-shadow: 0 0 28px rgba(18,201,168,0.4);
-      transform: translateY(-1px);
+    .invoice-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 48px;
+      margin-bottom: 64px;
     }
-
-    .tier-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 0 0 28px 0;
+    .invoice-header__copy { flex: 1; max-width: 520px; }
+    .invoice-header__meta {
+      flex-shrink: 0;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 20px 24px;
+      min-width: 220px;
     }
-
-    /* --- Tier glow for featured card --- */
-    @keyframes tierGlow {
-      from { box-shadow: 0 0 0   rgba(18,201,168,0.00), 0 24px 60px rgba(0,0,0,0.45); }
-      to   { box-shadow: 0 0 50px rgba(18,201,168,0.12), 0 24px 60px rgba(0,0,0,0.45); }
+    .invoice-header__meta-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text-2);
+      margin-bottom: 10px;
     }
-    .tier-card--featured { animation: tierGlow 3.5s ease-in-out infinite alternate; }
+    .invoice-header__meta-row:last-child { margin-bottom: 0; }
+    .invoice-header__meta-row svg { color: var(--accent); flex-shrink: 0; }
 
-    /* Keep old pricing-card class so existing CSS transitions don't error */
-    .pricing-card__note { color: var(--gray-500); font-size: 0.8rem; margin-top: 16px; }
+    /* Tool window */
+    .tool-window {
+      background: var(--bg-2);
+      border: 1px solid var(--line-md);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: 0 32px 72px rgba(0,0,0,0.5);
+    }
+    .tool-window__bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--bg-3);
+      border-bottom: 1px solid var(--line);
+    }
+    .tool-window__dots { display: flex; gap: 5px; }
+    .tool-window__dots i { width: 8px; height: 8px; border-radius: 50%; display: block; }
+    .tool-window__dots i:nth-child(1) { background: rgba(255,90,90,0.4); }
+    .tool-window__dots i:nth-child(2) { background: rgba(255,185,0,0.4); }
+    .tool-window__dots i:nth-child(3) { background: rgba(139,92,246,0.4); }
+    .tool-window__title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .tool-window__user {
+      font-size: 0.68rem;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .tool-window__body { padding: 32px; }
 
-    /* ─── Footer ───────────────────────────────────────────── */
+    /* Login screen */
+    .tool-login { max-width: 380px; margin: 0 auto; }
+    .tool-login__logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .tool-login__heading {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .tool-login__sub { font-size: 0.82rem; color: var(--text-2); margin-bottom: 28px; }
+    .tool-form__group { margin-bottom: 18px; }
+    .tool-form__label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-2);
+      margin-bottom: 7px;
+      letter-spacing: 0.03em;
+    }
+    .tool-form__input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-3);
+      border: 1px solid var(--line-md);
+      border-radius: var(--r-md);
+      color: var(--text);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      appearance: none;
+    }
+    .tool-form__input:focus {
+      border-color: var(--accent-20);
+      box-shadow: 0 0 0 3px var(--accent-10);
+    }
+    .tool-form__input::placeholder { color: var(--text-3); }
+    .tool-form__error {
+      font-size: 0.78rem;
+      color: #FF6B6B;
+      margin-top: 6px;
+      display: none;
+    }
+    .tool-form__error.visible { display: block; }
+    .tool-form__btn {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--r-md);
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.18s, box-shadow 0.18s, transform 0.15s;
+    }
+    .tool-form__btn:hover { background: var(--accent-hover); box-shadow: 0 0 0 4px var(--accent-10); transform: translateY(-1px); }
+    .tool-login__note { font-size: 0.75rem; color: var(--text-3); text-align: center; margin-top: 18px; }
+
+    /* Tool main screen */
+    .tool-main { display: none; }
+    .tool-main.active { display: block; }
+    .tool-login-wrap { display: block; }
+    .tool-login-wrap.hidden { display: none; }
+
+    .tool-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .tool-select {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-3);
+      border: 1px solid var(--line-md);
+      border-radius: var(--r-md);
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B80' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      transition: border-color 0.18s;
+    }
+    .tool-select:focus { border-color: var(--accent-20); box-shadow: 0 0 0 3px var(--accent-10); }
+
+    .tool-drop {
+      border: 1px dashed var(--line-md);
+      border-radius: var(--r-md);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .tool-drop:hover, .tool-drop.drag-over {
+      border-color: var(--accent-20);
+      background: var(--accent-10);
+    }
+    .tool-drop input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .tool-drop__icon { color: var(--text-3); margin-bottom: 10px; }
+    .tool-drop__label { font-size: 0.88rem; color: var(--text-2); margin-bottom: 4px; }
+    .tool-drop__sub { font-size: 0.75rem; color: var(--text-3); }
+
+    .tool-file-info {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: rgba(139,92,246,0.07);
+      border: 1px solid var(--accent-20);
+      border-radius: var(--r-md);
+      margin-bottom: 20px;
+      font-size: 0.82rem;
+      color: var(--text-2);
+    }
+    .tool-file-info.visible { display: flex; }
+    .tool-file-info svg { color: var(--accent); flex-shrink: 0; }
+    .tool-file-info strong { color: var(--text); }
+    .tool-file-info__clear {
+      margin-left: auto;
+      background: none;
+      border: none;
+      color: var(--text-3);
+      cursor: pointer;
+      padding: 2px;
+      transition: color 0.18s;
+    }
+    .tool-file-info__clear:hover { color: var(--text); }
+
+    /* Progress screen */
+    .tool-progress { display: none; text-align: center; padding: 20px 0; }
+    .tool-progress.active { display: block; }
+    .tool-progress__title { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .tool-progress__sub { font-size: 0.82rem; color: var(--text-2); margin-bottom: 28px; }
+    .tool-progress__bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: var(--line-md);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .tool-progress__bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .tool-progress__counter { font-size: 0.78rem; color: var(--text-2); margin-bottom: 20px; }
+    .tool-progress__log {
+      text-align: left;
+      max-height: 120px;
+      overflow-y: auto;
+      background: var(--bg-3);
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      padding: 10px 14px;
+    }
+    .tool-progress__log-item {
+      font-size: 0.75rem;
+      color: var(--text-2);
+      padding: 3px 0;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tool-progress__log-item:last-child { border-bottom: none; }
+    .tool-progress__log-item svg { color: var(--accent); flex-shrink: 0; }
+
+    /* Complete screen */
+    .tool-complete { display: none; text-align: center; padding: 20px 0; }
+    .tool-complete.active { display: block; }
+    .tool-complete__icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--accent-10);
+      border: 1px solid var(--accent-20);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      color: var(--accent);
+    }
+    .tool-complete__title { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .tool-complete__sub { font-size: 0.85rem; color: var(--text-2); margin-bottom: 28px; }
+    .tool-complete__actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Footer ────────────────────────────────────────────────── */
     .footer {
-      background: var(--bg-deep);
-      border-top: 1px solid var(--border);
-      padding: 64px 0 32px;
+      border-top: 1px solid var(--line);
+      padding: 64px 0 36px;
     }
-
     .footer__grid {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
       gap: 48px;
       margin-bottom: 56px;
     }
-
-    .footer__brand-desc {
-      color: var(--gray-400);
-      font-size: 0.88rem;
+    .footer__brand p {
+      font-size: 0.85rem;
+      color: var(--text-2);
       line-height: 1.7;
       margin-top: 14px;
-      max-width: 240px;
+      max-width: 220px;
     }
-
     .footer__col-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--gray-500);
+      color: var(--text-3);
       margin-bottom: 18px;
     }
-
     .footer__links { list-style: none; }
-
     .footer__links li { margin-bottom: 10px; }
-
     .footer__links a {
-      color: var(--gray-400);
-      font-size: 0.88rem;
-      transition: color 0.2s;
+      font-size: 0.85rem;
+      color: var(--text-2);
+      transition: color 0.18s;
     }
-
-    .footer__links a:hover { color: var(--teal); }
-
+    .footer__links a:hover { color: var(--text); }
     .footer__bottom {
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--line);
       padding-top: 28px;
       display: flex;
       justify-content: space-between;
@@ -853,1269 +1041,1347 @@
       flex-wrap: wrap;
       gap: 12px;
     }
-
-    .footer__copy { color: var(--gray-500); font-size: 0.82rem; }
-
-    .footer__social {
-      display: flex;
-      gap: 14px;
-    }
-
+    .footer__copy { font-size: 0.8rem; color: var(--text-3); }
+    .footer__social { display: flex; gap: 10px; }
     .footer__social a {
-      width: 34px; height: 34px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      width: 32px; height: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
       display: flex; align-items: center; justify-content: center;
-      color: var(--gray-400);
-      font-size: 0.85rem;
-      transition: all 0.2s;
+      font-size: 0.78rem;
+      color: var(--text-3);
+      transition: border-color 0.18s, color 0.18s;
     }
+    .footer__social a:hover { border-color: var(--line-md); color: var(--text); }
 
-    .footer__social a:hover {
-      border-color: var(--teal);
-      color: var(--teal);
-    }
+    /* ── Divider ───────────────────────────────────────────────── */
+    .rule { height: 1px; background: var(--line); }
 
-    /* ─── Logo image ─────────────────────────────────────── */
-    .logo-img {
-      width: 34px; height: 34px;
-      object-fit: contain;
-      border-radius: 8px;
-      display: block;
-      flex-shrink: 0;
-      filter:
-        drop-shadow(0 0 6px rgba(122,180,212,0.9))
-        drop-shadow(0 0 14px rgba(18,201,168,0.55))
-        drop-shadow(0 0 28px rgba(18,201,168,0.25));
-      animation: logoGlow 3s ease-in-out infinite alternate;
-    }
-    .logo-img-sm {
-      width: 26px; height: 26px;
-      object-fit: contain;
-      border-radius: 6px;
-      display: block;
-      flex-shrink: 0;
-      filter:
-        drop-shadow(0 0 5px rgba(122,180,212,0.85))
-        drop-shadow(0 0 12px rgba(18,201,168,0.45));
-    }
-    @keyframes logoGlow {
-      from { filter:
-        drop-shadow(0 0 5px rgba(122,180,212,0.8))
-        drop-shadow(0 0 12px rgba(18,201,168,0.4))
-        drop-shadow(0 0 22px rgba(18,201,168,0.15)); }
-      to   { filter:
-        drop-shadow(0 0 8px rgba(122,180,212,1))
-        drop-shadow(0 0 20px rgba(18,201,168,0.7))
-        drop-shadow(0 0 38px rgba(18,201,168,0.35)); }
-    }
-
-    /* ─── Divider line ─────────────────────────────────────── */
-    .gradient-line {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border-teal), transparent);
-      margin: 0;
-    }
-
-    /* ═══════════════════════════════════════════════════════ */
-    /* ANIMATIONS                                              */
-    /* ═══════════════════════════════════════════════════════ */
-
-    /* --- Hero stagger entrance --- */
-    .hero-anim {
-      opacity: 0;
-      transform: translateY(28px);
-      animation: heroRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-    .hero-anim--1 { animation-delay: 0.05s; }
-    .hero-anim--2 { animation-delay: 0.22s; }
-    .hero-anim--3 { animation-delay: 0.38s; }
-    .hero-anim--4 { animation-delay: 0.52s; }
-    .hero-anim--5 { animation-delay: 0.82s; }
-    @keyframes heroRise {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* --- Teal shimmer on italic em --- */
-    .hero__headline em {
-      background: linear-gradient(90deg, #12c9a8 0%, #7ae8d8 35%, #12c9a8 55%, #0ea88e 100%);
-      background-size: 250% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: textShimmer 4s linear infinite;
-      font-style: italic;
-    }
-    @keyframes textShimmer {
-      0%   { background-position: 250% center; }
-      100% { background-position: -250% center; }
-    }
-
-    /* --- Aurora morphing background --- */
-    @keyframes auroraShift {
-      0% {
-        background:
-          radial-gradient(ellipse 80% 60% at 50% -10%, rgba(18,201,168,0.18) 0%, transparent 60%),
-          radial-gradient(ellipse 60% 50% at 80% 20%, rgba(96,96,220,0.14) 0%, transparent 50%),
-          radial-gradient(ellipse 50% 70% at 15% 60%, rgba(18,201,168,0.08) 0%, transparent 60%),
-          #070b17;
-      }
-      50% {
-        background:
-          radial-gradient(ellipse 90% 70% at 45% -5%, rgba(18,201,168,0.22) 0%, transparent 65%),
-          radial-gradient(ellipse 70% 55% at 88% 28%, rgba(120,80,240,0.16) 0%, transparent 55%),
-          radial-gradient(ellipse 55% 65% at 8% 68%, rgba(18,201,168,0.1) 0%, transparent 62%),
-          #070b17;
-      }
-      100% {
-        background:
-          radial-gradient(ellipse 75% 55% at 52% -15%, rgba(18,201,168,0.15) 0%, transparent 58%),
-          radial-gradient(ellipse 55% 45% at 72% 18%, rgba(80,100,230,0.12) 0%, transparent 48%),
-          radial-gradient(ellipse 48% 72% at 18% 62%, rgba(18,201,168,0.07) 0%, transparent 60%),
-          #070b17;
-      }
-    }
-    .hero__bg { animation: auroraShift 14s ease-in-out infinite alternate; }
-
-    /* --- Particle canvas --- */
-    #hero-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* --- Cursor spotlight --- */
-    .hero__spotlight {
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(18,201,168,0.065) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 1;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-    }
-
-    /* --- Scroll reveal --- */
+    /* ── Scroll reveal ─────────────────────────────────────────── */
     .reveal {
       opacity: 0;
-      transform: translateY(34px);
-      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-                  transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
     }
-    .reveal.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .reveal.in { opacity: 1; transform: none; }
 
-    /* --- Step icon ring pulse --- */
-    .step__icon { position: relative; }
-    .step__icon::after {
-      content: '';
-      position: absolute;
-      inset: -6px;
-      border-radius: 50%;
-      border: 1px solid rgba(18,201,168,0.5);
+    /* ── Hero entrance ─────────────────────────────────────────── */
+    .hero-in {
       opacity: 0;
-      animation: iconRing 3s ease-out infinite;
+      transform: translateY(20px);
+      animation: heroIn 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
     }
-    .step:nth-child(3) .step__icon::after { animation-delay: 1s; }
-    .step:nth-child(5) .step__icon::after { animation-delay: 2s; }
-    @keyframes iconRing {
-      0%   { transform: scale(1);   opacity: 0.65; }
-      100% { transform: scale(1.7); opacity: 0; }
-    }
-
-    /* --- Feature icon hop on hover --- */
-    .feature-card__icon {
-      display: inline-block;
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .feature-card:hover .feature-card__icon { transform: translateY(-6px) scale(1.18); }
-
-    /* --- Pricing card glow pulse --- */
-    @keyframes pricingGlow {
-      from { box-shadow: 0 0 0   rgba(18,201,168,0.00), 0 0  0  rgba(18,201,168,0.00); }
-      to   { box-shadow: 0 0 60px rgba(18,201,168,0.14), 0 0 120px rgba(18,201,168,0.06); }
-    }
-    .pricing-card { animation: pricingGlow 3.5s ease-in-out infinite alternate; }
-
-    /* --- Testimonial hover lift --- */
-    .testimonial {
-      transition: transform 0.3s ease, border-color 0.3s, box-shadow 0.3s;
-    }
-    .testimonial:hover {
-      transform: translateY(-5px);
-      border-color: var(--border-teal);
-      box-shadow: 0 28px 56px rgba(0,0,0,0.38);
+    .hero-in--1 { animation-delay: 0.05s; }
+    .hero-in--2 { animation-delay: 0.18s; }
+    .hero-in--3 { animation-delay: 0.30s; }
+    .hero-in--4 { animation-delay: 0.44s; }
+    .hero-in--5 { animation-delay: 0.58s; }
+    @keyframes heroIn {
+      to { opacity: 1; transform: none; }
     }
 
-    /* --- Nav link underline slide --- */
-    .nav__links a { position: relative; }
-    .nav__links a::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; left: 0;
-      width: 0; height: 1px;
-      background: var(--teal);
-      transition: width 0.25s ease;
-    }
-    .nav__links a:hover::after { width: 100%; }
-
-    /* --- Tag float --- */
-    .tag { animation: tagBob 5s ease-in-out infinite alternate; }
-    @keyframes tagBob {
-      from { transform: translateY(0); }
-      to   { transform: translateY(-3px); }
-    }
-
-    /* --- Hero scroll hint fade --- */
-    .hero__scroll { transition: opacity 0.5s ease; }
-
-    /* --- SVG icon transitions --- */
-    .pain-card__icon svg,
-    .feature-card__icon svg {
-      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                  filter 0.3s ease;
-    }
-    .pain-card:hover .pain-card__icon svg {
-      transform: scale(1.18) rotate(-6deg);
-      filter: drop-shadow(0 0 8px rgba(18,201,168,0.55));
-    }
-    .step__icon svg { transition: filter 0.3s ease; }
-    .step:hover .step__icon svg { filter: drop-shadow(0 0 10px rgba(18,201,168,0.7)); }
-
-    /* --- Clock hand animation (step 3) --- */
-    .clock-min {
-      transform-origin: 12px 12px;
-      animation: clockSpin 3s linear infinite;
-    }
-    @keyframes clockSpin { to { transform: rotate(360deg); } }
-
-    /* ─── Scrolling Marquee Strip ──────────────────────────── */
-    .marquee-wrap {
-      overflow: hidden;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-mid);
-      padding: 13px 0;
-      position: relative;
-      z-index: 5;
-    }
-    .marquee-wrap::before,
-    .marquee-wrap::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 100px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .marquee-wrap::before { left: 0;  background: linear-gradient(90deg, var(--bg-mid), transparent); }
-    .marquee-wrap::after  { right: 0; background: linear-gradient(270deg, var(--bg-mid), transparent); }
-    .marquee-track {
-      display: flex;
-      width: max-content;
-      animation: marqueeScroll 34s linear infinite;
-    }
-    .marquee-track:hover { animation-play-state: paused; }
-    .marquee-inner {
-      display: flex;
-      align-items: center;
-      gap: 26px;
-      padding-right: 26px;
-      white-space: nowrap;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .marquee-item { color: var(--gray-500); }
-    .marquee-dot  { color: var(--teal); opacity: 0.45; }
-    @keyframes marqueeScroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* ─── Hero two-column layout ───────────────────────────── */
-    .hero__layout {
-      display: flex;
-      align-items: center;
-      gap: 56px;
-    }
-    .hero__content { flex: 1 1 auto; max-width: 580px; }
-
-    /* ─── Hero Mockup Card ─────────────────────────────────── */
-    .hero__mockup {
-      flex: 0 0 400px;
-      animation: mockupEntrance 1s cubic-bezier(0.22, 1, 0.36, 1) 0.65s both;
-    }
-    @keyframes mockupEntrance {
-      from { opacity: 0; transform: translateX(36px) translateY(20px); }
-      to   { opacity: 1; transform: translateX(0) translateY(0); }
-    }
-    .mockup-card {
-      background: rgba(11, 15, 28, 0.88);
-      border: 1px solid rgba(18,201,168,0.22);
-      border-radius: 18px;
-      padding: 20px;
-      backdrop-filter: blur(24px);
-      box-shadow:
-        0 32px 80px rgba(0,0,0,0.65),
-        0 0 0 1px rgba(255,255,255,0.04),
-        inset 0 1px 0 rgba(255,255,255,0.05);
-      animation: mockupFloat 7s ease-in-out infinite alternate;
-    }
-    @keyframes mockupFloat {
-      from { transform: translateY(0px)  rotate(-0.4deg); }
-      to   { transform: translateY(-14px) rotate(0.4deg); }
-    }
-    .mockup-header {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 16px;
-      padding-bottom: 13px;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--gray-400);
-    }
-    .mockup-live {
-      display: flex; align-items: center; gap: 5px;
-      margin-left: auto;
-      color: var(--teal);
-      font-size: 0.68rem;
-    }
-    .mockup-live-dot {
-      width: 6px; height: 6px;
-      background: var(--teal);
-      border-radius: 50%;
-      animation: livePulse 1.6s ease-in-out infinite;
-    }
-    @keyframes livePulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(18,201,168,0.5); }
-      50%       { opacity: 0.6; box-shadow: 0 0 0 5px rgba(18,201,168,0); }
-    }
-    .mockup-feed { min-height: 150px; margin-bottom: 14px; }
-    .mockup-item {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 9px 11px;
-      border-radius: 9px;
-      margin-bottom: 5px;
-      font-size: 0.75rem;
-      color: var(--gray-400);
-      background: rgba(255,255,255,0.025);
-      border: 1px solid transparent;
-      animation: feedItemIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-    @keyframes feedItemIn {
-      from { opacity: 0; transform: translateX(-10px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    .mockup-item--done        { border-color: rgba(18,201,168,0.14);  background: rgba(18,201,168,0.04); }
-    .mockup-item--processing  { border-color: rgba(255,176,0,0.13);   background: rgba(255,176,0,0.03);  }
-    .mockup-item__badge {
-      width: 20px; height: 20px;
-      border-radius: 5px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      font-size: 0.6rem;
-      font-weight: 800;
-      letter-spacing: 0;
-    }
-    .mockup-item--done .mockup-item__badge        { background: rgba(18,201,168,0.18); color: var(--teal); }
-    .mockup-item--processing .mockup-item__badge  { background: rgba(255,176,0,0.18);  color: #ffb000; }
-    .mockup-item__text  { flex: 1; font-size: 0.74rem; line-height: 1.25; }
-    .mockup-item__age   { font-size: 0.65rem; color: var(--gray-500); flex-shrink: 0; }
-    .mockup-spinner {
-      width: 11px; height: 11px;
-      border: 1.5px solid rgba(255,176,0,0.25);
-      border-top-color: #ffb000;
-      border-radius: 50%;
-      animation: spin 0.75s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ─── Mockup redesign ─────────────────────────────────── */
-    .mockup-topbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .mockup-topbar-dots { display: flex; gap: 4px; }
-    .mockup-topbar-dots span {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-    }
-    .mockup-topbar-dots span:nth-child(1) { background: rgba(255,80,80,0.5); }
-    .mockup-topbar-dots span:nth-child(2) { background: rgba(255,180,0,0.5); }
-    .mockup-topbar-dots span:nth-child(3) { background: rgba(18,201,168,0.5); }
-    .mockup-topbar-title {
-      flex: 1;
+    /* ── Pricing note ──────────────────────────────────────────── */
+    .pricing-note {
       text-align: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gray-400);
+      font-size: 0.82rem;
+      color: var(--text-2);
+      margin-top: 28px;
+      line-height: 1.7;
     }
+    .pricing-note a { color: var(--accent); border-bottom: 1px solid var(--accent-20); }
 
-    .mockup-metrics {
-      display: flex;
-      align-items: center;
-      background: rgba(18,201,168,0.04);
-      border: 1px solid rgba(18,201,168,0.12);
-      border-radius: 10px;
-      padding: 10px 0;
-      margin-bottom: 14px;
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero__inner { flex-direction: column; gap: 48px; text-align: center; }
+      .hero__copy { max-width: 600px; }
+      .hero__cta-row { justify-content: center; }
+      .hero__trust { justify-content: center; }
+      .hero__visual { flex: none; width: 100%; max-width: 480px; }
+      .tiers { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; }
+      .invoice-header { flex-direction: column; gap: 32px; }
+      .invoice-header__meta { width: 100%; }
     }
-    .mockup-metric     { flex: 1; text-align: center; }
-    .mockup-metric-val {
-      display: block;
-      font-family: var(--font-serif);
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--teal);
-      line-height: 1;
-      margin-bottom: 2px;
-    }
-    .mockup-metric-label {
-      font-size: 0.58rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--gray-500);
-    }
-    .mockup-metric-sep { width: 1px; height: 26px; background: var(--border); }
-
-    .mockup-section-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--gray-500);
-      margin-bottom: 8px;
-    }
-    .mockup-section-label svg { flex-shrink: 0; }
-
-    .mockup-savings {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-      padding: 10px 12px;
-      background: rgba(18,201,168,0.05);
-      border: 1px solid rgba(18,201,168,0.12);
-      border-radius: 8px;
-    }
-    .mockup-savings-label { font-size: 0.63rem; color: var(--gray-500); white-space: nowrap; }
-    .mockup-savings-bar {
-      flex: 1;
-      height: 4px;
-      background: rgba(255,255,255,0.07);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .mockup-savings-fill {
-      height: 100%;
-      width: 68%;
-      background: linear-gradient(90deg, var(--teal), #7ae8d8);
-      border-radius: 2px;
-      animation: savingsFill 1.8s ease-out 1.2s both;
-    }
-    @keyframes savingsFill { from { width: 0; } to { width: 68%; } }
-    .mockup-savings-val {
-      font-family: var(--font-serif);
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--teal);
-      white-space: nowrap;
-    }
-
-    /* keep divider + old stat classes so JS renderFeed still works */
-    .mockup-divider { height: 1px; background: var(--border); margin: 10px 0; }
-
-    /* ─── Responsive ───────────────────────────────────────── */
-    @media (max-width: 1000px) {
-      .hero__mockup { flex: 0 0 340px; }
-      .pricing-tiers { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
-    }
-    @media (max-width: 900px) {
-      .hero__layout { flex-direction: column-reverse; gap: 40px; }
-      .hero__mockup { flex: none; width: 100%; max-width: 360px; margin: 0 auto; }
-      .steps {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
-      .step-arrow { transform: rotate(90deg); margin: 0 auto; }
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 768px) {
+      .nav__links, .nav__actions { display: none; }
+      .nav__burger { display: flex; }
+      .section { padding: 80px 0; }
+      .problems-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      .features-layout { grid-template-columns: 1fr; }
+      .feat--wide { grid-column: auto; }
+      .stats { grid-template-columns: 1fr; }
       .testimonials { grid-template-columns: 1fr; }
       .footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .tool-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 540px) {
+      .wrap { width: calc(100% - 32px); }
+      .footer__grid { grid-template-columns: 1fr; }
+      .hero__inner { text-align: left; }
+      .hero__cta-row { justify-content: flex-start; }
+      .hero__trust { justify-content: flex-start; }
+      .tool-row { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 640px) {
-      .nav__links { display: none; }
-      .section { padding: 72px 0; }
-      .features-grid { grid-template-columns: 1fr; }
-      .pain-grid { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: 1fr; }
-      .stat { border-right: none; border-bottom: 1px solid var(--border); }
-      .stat:last-child { border-bottom: none; }
-      .footer__grid { grid-template-columns: 1fr; }
-      .pricing-tiers { max-width: 100%; }
-      .tier-card { padding: 32px 24px; }
-      .hero__layout { gap: 32px; }
+    /* ── Mobile Nav Drawer ─────────────────────────────────────── */
+    .nav-drawer {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 190;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-1);
+      border-right: 1px solid var(--line-md);
+      padding: 24px 28px 36px;
+      width: 280px;
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
     }
+    .nav-drawer.open { transform: translateX(0); }
+
+    .nav-drawer__overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .nav-drawer__overlay.open { opacity: 1; pointer-events: all; }
+
+    .nav-drawer__top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 36px;
+    }
+    .nav-drawer__close {
+      width: 30px; height: 30px;
+      background: none;
+      border: 1px solid var(--line-md);
+      border-radius: var(--r);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: border-color 0.18s, color 0.18s;
+    }
+    .nav-drawer__close:hover { border-color: var(--line-md); color: var(--text); }
+
+    .nav-drawer__links { list-style: none; flex: 1; }
+    .nav-drawer__links li { border-bottom: 1px solid var(--line); }
+    .nav-drawer__links a {
+      display: block;
+      padding: 15px 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-2);
+      transition: color 0.18s;
+    }
+    .nav-drawer__links a:hover { color: var(--text); }
+
+    .nav-drawer__cta { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; }
+    .nav-drawer__cta .btn { width: 100%; justify-content: center; }
+
+    .nav__burger span { transition: transform 0.22s ease, opacity 0.22s ease; }
+    .nav__burger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav__burger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav__burger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
   </style>
 </head>
 
 <body>
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- NAV                                                      -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <nav class="nav" id="navbar">
-    <div class="container nav__inner">
-      <a href="#" class="nav__logo">
-        <img src="brand_assets/ea84020a-269d-44c5-bfac-bc064ef6f0c7.JPG" alt="Noumena logo" class="logo-img" />
-        <span class="nav__wordmark">Noumena</span>
-      </a>
-
-      <ul class="nav__links">
-        <li><a href="#pain-points">Problems</a></li>
-        <li><a href="#how-it-works">How It Works</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#pricing">Services</a></li>
-      </ul>
-
-      <div class="nav__cta">
-        <a href="#pricing" class="btn btn-ghost" style="padding:10px 20px; font-size:0.85rem;">Book a Demo</a>
-        <a href="#pricing" class="btn btn-primary" style="padding:10px 20px; font-size:0.85rem;">Get Started</a>
-      </div>
-    </div>
-  </nav>
-
-
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- HERO                                                     -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <section class="hero" id="hero">
-    <div class="hero__bg"></div>
-    <div class="hero__grid"></div>
-    <div class="hero__orb hero__orb--1"></div>
-    <div class="hero__orb hero__orb--2"></div>
-    <div class="hero__orb hero__orb--3"></div>
-    <div class="aurora-band aurora-band--1"></div>
-    <div class="aurora-band aurora-band--2"></div>
-    <div class="aurora-band aurora-band--3"></div>
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero__spotlight" id="hero-spotlight"></div>
-
-    <div class="container" style="position:relative; z-index:2;">
-      <div class="hero__layout">
-      <div class="hero__content">
-        <div class="hero__eyebrow hero-anim hero-anim--1">
-          <span class="hero__eyebrow-dot"></span>
-          AI-Powered Property Management
-        </div>
-
-        <h1 class="hero__headline hero-anim hero-anim--2">
-          Your portfolio,<br />
-          running on <em>autopilot.</em>
-        </h1>
-
-        <p class="hero__sub hero-anim hero-anim--3">
-          Noumena eliminates daily admin for property managers — automating emails, scheduling, tenant communications, rent collection, maintenance tracking, and compliance in one intelligent system.
-        </p>
-
-        <div class="hero__actions hero-anim hero-anim--4">
-          <a href="#pricing" class="btn btn-primary" style="padding:16px 36px; font-size:1rem;">
-            Book a Demo
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          <a href="#how-it-works" class="btn btn-ghost" style="padding:16px 36px; font-size:1rem;">See How It Works</a>
-        </div>
-      </div>
-
-      <!-- ── Floating AI dashboard mockup ── -->
-      <div class="hero__mockup">
-        <div class="mockup-card">
-
-          <!-- window chrome -->
-          <div class="mockup-topbar">
-            <div class="mockup-topbar-dots">
-              <span></span><span></span><span></span>
-            </div>
-            <span class="mockup-topbar-title">Noumena AI</span>
-            <div class="mockup-live">
-              <div class="mockup-live-dot"></div>
-              Live
-            </div>
-          </div>
-
-          <!-- key metrics -->
-          <div class="mockup-metrics">
-            <div class="mockup-metric">
-              <span class="mockup-metric-val">847</span>
-              <span class="mockup-metric-label">Emails</span>
-            </div>
-            <div class="mockup-metric-sep"></div>
-            <div class="mockup-metric">
-              <span class="mockup-metric-val">24</span>
-              <span class="mockup-metric-label">Tasks</span>
-            </div>
-            <div class="mockup-metric-sep"></div>
-            <div class="mockup-metric">
-              <span class="mockup-metric-val">99%</span>
-              <span class="mockup-metric-label">Uptime</span>
-            </div>
-          </div>
-
-          <!-- activity feed -->
-          <div class="mockup-section-label">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Active Automations
-          </div>
-          <div class="mockup-feed" id="mockup-feed"></div>
-
-          <!-- time saved bar -->
-          <div class="mockup-savings">
-            <span class="mockup-savings-label">Time saved today</span>
-            <div class="mockup-savings-bar">
-              <div class="mockup-savings-fill"></div>
-            </div>
-            <span class="mockup-savings-val">3.2 hrs</span>
-          </div>
-
-        </div>
-      </div>
-
-      </div><!-- /.hero__layout -->
-    </div>
-
-    <div class="hero__scroll hero-anim hero-anim--5">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M10 4v12M6 12l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- ══════════════════════════════════════════════════════════════
+  NAV
+══════════════════════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <a href="#" class="logo">
+      <svg class="logo-mark" viewBox="0 0 22 28" fill="none" aria-hidden="true">
+        <path d="M2.5 25.5V2.5L19.5 25.5V2.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      Scroll
-    </div>
-  </section>
+      <span class="logo-word">Noumena</span>
+    </a>
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- MARQUEE TICKER                                           -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <div class="marquee-wrap">
-    <div class="marquee-track">
-      <div class="marquee-inner">
-        <span class="marquee-item">Email Triage</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Rent Collection</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Maintenance Routing</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Compliance Monitoring</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Tenant Communications</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Inspection Scheduling</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Late Payment Alerts</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Contractor Coordination</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Lease Renewals</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Portfolio Reporting</span><span class="marquee-dot">·</span>
+    <ul class="nav__links">
+      <li><a href="#platform">Platform</a></li>
+      <li><a href="#invoice">Invoice App</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav__actions">
+      <a href="tel:7804123415" class="btn btn-ghost" style="padding:10px 18px;">Book a Call</a>
+      <a href="#invoice" class="btn btn-primary" style="padding:10px 18px;">Invoice Tool</a>
+    </div>
+
+    <button class="nav__burger" id="burger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile nav drawer -->
+<div class="nav-drawer__overlay" id="nav-overlay"></div>
+<aside class="nav-drawer" id="nav-drawer" aria-label="Mobile navigation">
+  <div class="nav-drawer__top">
+    <a href="#" class="logo">
+      <svg viewBox="0 0 22 28" fill="none" style="width:18px;height:22px;">
+        <path d="M2.5 25.5V2.5L19.5 25.5V2.5" stroke="#8B5CF6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-word" style="font-size:0.88rem;">Noumena</span>
+    </a>
+    <button class="nav-drawer__close" id="nav-close" aria-label="Close menu">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <ul class="nav-drawer__links">
+    <li><a href="#platform" class="drawer-link">Platform</a></li>
+    <li><a href="#invoice" class="drawer-link">Invoice App</a></li>
+    <li><a href="#services" class="drawer-link">Services</a></li>
+    <li><a href="#contact" class="drawer-link">Contact</a></li>
+  </ul>
+  <div class="nav-drawer__cta">
+    <a href="tel:7804123415" class="btn btn-ghost drawer-link">Book a Call</a>
+    <a href="#invoice" class="btn btn-primary drawer-link">Invoice Tool</a>
+  </div>
+</aside>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+  HERO
+══════════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero__grid-bg"></div>
+  <div class="hero__glow"></div>
+  <div class="hero__glow-2"></div>
+
+  <div class="wrap hero__inner">
+    <div class="hero__copy">
+      <div class="eyebrow hero-in hero-in--1">AI-Powered Property Management</div>
+
+      <h1 class="display hero-in hero-in--2" style="margin-bottom:20px;">
+        Your portfolio,<br/>running on <em>autopilot.</em>
+      </h1>
+
+      <p class="lead hero-in hero-in--3">
+        Noumena eliminates daily admin for property managers — automating emails, scheduling, tenant communications, rent collection, maintenance tracking, and compliance in one intelligent platform.
+      </p>
+
+      <div class="hero__cta-row hero-in hero-in--4">
+        <a href="#services" class="btn btn-primary" style="padding:14px 28px; font-size:0.92rem;">
+          Book a Demo
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#platform" class="btn btn-ghost" style="padding:14px 28px; font-size:0.92rem;">See How It Works</a>
       </div>
-      <div class="marquee-inner" aria-hidden="true">
-        <span class="marquee-item">Email Triage</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Rent Collection</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Maintenance Routing</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Compliance Monitoring</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Tenant Communications</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Inspection Scheduling</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Late Payment Alerts</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Contractor Coordination</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Lease Renewals</span><span class="marquee-dot">·</span>
-        <span class="marquee-item">Portfolio Reporting</span><span class="marquee-dot">·</span>
+
+      <div class="hero__trust hero-in hero-in--5">
+        <div class="hero__trust-stat">
+          <strong data-counter="12" data-suffix="hrs">12hrs</strong>
+          <span>saved / week</span>
+        </div>
+        <div class="hero__trust-line"></div>
+        <div class="hero__trust-stat">
+          <strong data-counter="94" data-suffix="%">94%</strong>
+          <span>faster email response</span>
+        </div>
+        <div class="hero__trust-line"></div>
+        <div class="hero__trust-stat">
+          <strong>Zero</strong>
+          <span>missed deadlines</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard preview -->
+    <div class="hero__visual">
+      <div class="dash">
+        <div class="dash-bar">
+          <div class="dash-dots"><i></i><i></i><i></i></div>
+          <span class="dash-title">Noumena Dashboard</span>
+          <div class="dash-live"><div class="dash-live-dot"></div>Live</div>
+        </div>
+        <div class="dash-body">
+          <div class="dash-label">Portfolio Overview</div>
+          <div class="dash-props">
+            <div class="dash-prop">
+              <span class="dash-prop-name">City Gate East</span>
+              <div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:82%"></div></div>
+              <span class="dash-pct">82%</span>
+            </div>
+            <div class="dash-prop">
+              <span class="dash-prop-name">City Gate West</span>
+              <div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:71%"></div></div>
+              <span class="dash-pct">71%</span>
+            </div>
+            <div class="dash-prop">
+              <span class="dash-prop-name">Comms Parking</span>
+              <div class="dash-bar-wrap"><div class="dash-bar-fill" style="width:90%"></div></div>
+              <span class="dash-pct">90%</span>
+            </div>
+          </div>
+          <div class="dash-divider"></div>
+          <div class="dash-metrics">
+            <div class="dash-metric"><strong>847</strong><span>Emails</span></div>
+            <div class="dash-metric"><strong>100%</strong><span>Uptime</span></div>
+            <div class="dash-metric"><strong>0</strong><span>Missed</span></div>
+          </div>
+          <div class="dash-activity" style="margin-top:16px;">
+            <div class="dash-label">Recent Activity</div>
+            <div class="dash-act-item dash-act-item--done">
+              <div class="dash-act-dot dash-act-dot--done"></div>
+              Rent reminder sent — 6 tenants
+              <span class="dash-act-time">2m ago</span>
+            </div>
+            <div class="dash-act-item dash-act-item--done">
+              <div class="dash-act-dot dash-act-dot--done"></div>
+              Maintenance #18 — Assigned to plumber
+              <span class="dash-act-time">9m ago</span>
+            </div>
+            <div class="dash-act-item dash-act-item--pending">
+              <div class="dash-act-dot dash-act-dot--pending"></div>
+              EPC renewal — Unit 4B due in 14 days
+              <span class="dash-act-time">alert</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</section>
 
-  <div class="gradient-line"></div>
+
+<!-- ══════════════════════════════════════════════════════════════
+  MARQUEE
+══════════════════════════════════════════════════════════════ -->
+<div class="marquee">
+  <div class="marquee__track">
+    <div class="marquee__inner" aria-hidden="false">
+      <span class="marquee__item">Email Triage</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Rent Collection</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Maintenance Routing</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Compliance Monitoring</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Tenant Communications</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Inspection Scheduling</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Late Payment Alerts</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Contractor Coordination</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Lease Renewals</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Portfolio Reporting</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Invoice Generation</span><span class="marquee__sep">·</span>
+    </div>
+    <div class="marquee__inner" aria-hidden="true">
+      <span class="marquee__item">Email Triage</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Rent Collection</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Maintenance Routing</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Compliance Monitoring</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Tenant Communications</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Inspection Scheduling</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Late Payment Alerts</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Contractor Coordination</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Lease Renewals</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Portfolio Reporting</span><span class="marquee__sep">·</span>
+      <span class="marquee__item">Invoice Generation</span><span class="marquee__sep">·</span>
+    </div>
+  </div>
+</div>
 
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- PAIN POINTS                                              -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <section class="section" id="pain-points">
-    <div class="container">
-      <div class="section-header">
-        <div class="tag">The Problem</div>
-        <h2 class="section-heading">Property management shouldn't<br />feel like firefighting</h2>
-        <p class="section-sub">If you manage multiple properties, you know the grind. Here's what's eating your time.</p>
+<!-- ══════════════════════════════════════════════════════════════
+  PLATFORM / PROBLEMS
+══════════════════════════════════════════════════════════════ -->
+<section class="section" id="platform">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">The Problem</div>
+      <h2 class="h2" style="margin-bottom:16px;">Property management<br/>shouldn't feel like firefighting.</h2>
+      <p class="lead">If you manage multiple properties, you know the grind. Here's what's eating your time — and how Noumena eliminates it.</p>
+    </div>
+
+    <div class="problems-grid reveal">
+      <div class="problem-cell">
+        <div class="problem-cell__num">01</div>
+        <h3 class="problem-cell__title">Inbox Overload</h3>
+        <p class="problem-cell__text">Hundreds of tenant emails a week — maintenance requests, lease queries, complaints — all landing in one inbox with no system to triage, prioritise, or track them.</p>
+      </div>
+      <div class="problem-cell">
+        <div class="problem-cell__num">02</div>
+        <h3 class="problem-cell__title">Missed Maintenance</h3>
+        <p class="problem-cell__text">Requests fall through the cracks. Tenants chase up. Contractors don't get briefed in time. Small issues compound into expensive emergencies.</p>
+      </div>
+      <div class="problem-cell">
+        <div class="problem-cell__num">03</div>
+        <h3 class="problem-cell__title">Chasing Rent</h3>
+        <p class="problem-cell__text">Manual reminders, late fees, and follow-ups consume hours every month — time that could be spent growing your portfolio or serving tenants better.</p>
+      </div>
+      <div class="problem-cell">
+        <div class="problem-cell__num">04</div>
+        <h3 class="problem-cell__title">Compliance Anxiety</h3>
+        <p class="problem-cell__text">Keeping track of inspections, certificates, and regulatory deadlines across multiple properties is a constant source of stress, risk, and potential liability.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+  HOW IT WORKS
+══════════════════════════════════════════════════════════════ -->
+<section class="section section--alt">
+  <div class="wrap">
+    <div class="section-head section-head--center reveal">
+      <div class="eyebrow">How It Works</div>
+      <h2 class="h2" style="margin-bottom:16px;">Three steps to reclaim your time.</h2>
+      <p class="lead">No complex onboarding. No months of setup. Noumena integrates with your existing tools and starts automating within days.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step__num">01</div>
+        <h3 class="step__title">Connect Your Tools</h3>
+        <p class="step__text">We integrate with your existing email, property management software, and communication channels. No migration required — we meet you where you are.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">02</div>
+        <h3 class="step__title">We Automate Your Workflows</h3>
+        <p class="step__text">Our AI handles email triage, tenant replies, maintenance routing, rent reminders, compliance alerts, and invoice generation — automatically and accurately.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">03</div>
+        <h3 class="step__title">You Get Your Time Back</h3>
+        <p class="step__text">Review a clean dashboard each morning. Your properties are running. Your tenants are served. You focus on the decisions that actually require a human.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+  FEATURES
+══════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Features</div>
+      <h2 class="h2" style="margin-bottom:16px;">Everything automated.<br/>Nothing missed.</h2>
+      <p class="lead">Noumena covers every repetitive task in your day — so you can focus on the decisions that actually require you.</p>
+    </div>
+
+    <div class="features-layout reveal">
+      <div class="feat">
+        <div class="feat__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        </div>
+        <h3 class="feat__title">Email Triage & Auto-Drafting</h3>
+        <p class="feat__text">AI reads, categorises, and drafts responses to incoming emails. You review and approve — or let it run fully automated for routine enquiries.</p>
       </div>
 
-      <div class="pain-grid">
-        <div class="pain-card">
-          <div class="pain-card__icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
-          </div>
-          <h3 class="pain-card__title">Inbox Overload</h3>
-          <p class="pain-card__text">Hundreds of tenant emails a week — maintenance requests, lease queries, complaints — all landing in one inbox with no system to triage them.</p>
+      <div class="feat">
+        <div class="feat__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
+        <h3 class="feat__title">Tenant Communication Hub</h3>
+        <p class="feat__text">Consistent, professional responses to tenant queries 24/7. Escalations are flagged immediately so nothing urgent slips through.</p>
+      </div>
 
-        <div class="pain-card">
-          <div class="pain-card__icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-          </div>
-          <h3 class="pain-card__title">Missed Maintenance</h3>
-          <p class="pain-card__text">Requests fall through the cracks. Tenants chase up. Contractors don't get briefed. Small issues become expensive emergencies.</p>
+      <div class="feat">
+        <div class="feat__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         </div>
+        <h3 class="feat__title">Rent Collection & Reminders</h3>
+        <p class="feat__text">Automated payment reminders, overdue notices, and escalation sequences. Track rent status across your entire portfolio in one clean view.</p>
+      </div>
 
-        <div class="pain-card">
-          <div class="pain-card__icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          </div>
-          <h3 class="pain-card__title">Chasing Rent</h3>
-          <p class="pain-card__text">Manual rent reminders, late fees, and follow-ups consume hours every month — time that could be spent growing your portfolio.</p>
+      <div class="feat">
+        <div class="feat__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         </div>
+        <h3 class="feat__title">Maintenance Request Routing</h3>
+        <p class="feat__text">Tenants submit requests, our system triages urgency, assigns the right contractor, and tracks resolution — end to end without manual intervention.</p>
+      </div>
 
-        <div class="pain-card">
-          <div class="pain-card__icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-          </div>
-          <h3 class="pain-card__title">Compliance Anxiety</h3>
-          <p class="pain-card__text">Keeping track of inspections, certifications, and regulatory deadlines across multiple properties is a constant source of stress and risk.</p>
+      <div class="feat">
+        <div class="feat__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        </div>
+        <h3 class="feat__title">Compliance Monitoring</h3>
+        <p class="feat__text">Never miss a gas certificate, EPC renewal, or inspection deadline. Automated alerts and scheduling keep you permanently compliant and audit-ready.</p>
+      </div>
+
+      <div class="feat">
+        <div class="feat__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+        </div>
+        <h3 class="feat__title">Portfolio Dashboard</h3>
+        <p class="feat__text">A clean, real-time view of your entire portfolio — occupancy, open issues, payments, and upcoming tasks — in one place, accessible anywhere.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+  INVOICE APP  ← NEW SECTION
+══════════════════════════════════════════════════════════════ -->
+<section class="section invoice-app" id="invoice">
+  <div class="wrap">
+
+    <div class="invoice-header reveal">
+      <div class="invoice-header__copy">
+        <div class="eyebrow">Invoice Generator</div>
+        <h2 class="h2" style="margin-bottom:16px;">104 invoices.<br/>Under 10 seconds.</h2>
+        <p class="lead">Built for Peoples Property Management. Upload your Excel tenant list and instantly generate a professional service charge demand PDF for every tenant — bundled into a single ZIP download.</p>
+      </div>
+      <div class="invoice-header__meta">
+        <div class="invoice-header__meta-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Upload a .xlsx with Tenant Name + Rent Amount
+        </div>
+        <div class="invoice-header__meta-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Select property and quarter
+        </div>
+        <div class="invoice-header__meta-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          One PDF per tenant, automatically
+        </div>
+        <div class="invoice-header__meta-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download all as one ZIP instantly
         </div>
       </div>
     </div>
-  </section>
 
-  <div class="gradient-line"></div>
-
-
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- HOW IT WORKS                                             -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <section class="section section--alt" id="how-it-works">
-    <div class="container">
-      <div class="section-header">
-        <div class="tag">How It Works</div>
-        <h2 class="section-heading">Three steps to reclaim your time</h2>
-        <p class="section-sub">No complex onboarding. No months of setup. Noumena integrates with your existing tools and starts automating within days.</p>
+    <!-- The actual tool -->
+    <div class="tool-window reveal">
+      <div class="tool-window__bar">
+        <div class="tool-window__dots"><i></i><i></i><i></i></div>
+        <span class="tool-window__title">Noumena Invoice Generator — Peoples Property Management</span>
+        <div class="tool-window__user" id="tool-user-display" style="display:none;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/></svg>
+          <span id="tool-user-name"></span>
+        </div>
       </div>
+      <div class="tool-window__body">
 
-      <div class="steps">
-        <div class="step">
-          <div class="step__icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <!-- LOGIN -->
+        <div class="tool-login-wrap" id="tool-login-wrap">
+          <div class="tool-login">
+            <div class="tool-login__logo">
+              <svg width="18" height="22" viewBox="0 0 22 28" fill="none">
+                <path d="M2.5 25.5V2.5L19.5 25.5V2.5" stroke="#8B5CF6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span style="font-size:0.85rem;font-weight:700;letter-spacing:0.15em;color:var(--text);">NOUMENA</span>
+            </div>
+            <h2 class="tool-login__heading">Invoice Generator</h2>
+            <p class="tool-login__sub">Sign in to access the Peoples Property Management invoice tool.</p>
+
+            <form id="login-form" autocomplete="off">
+              <div class="tool-form__group">
+                <label class="tool-form__label" for="login-user">Username</label>
+                <input class="tool-form__input" type="text" id="login-user" placeholder="Enter username" autocomplete="username" />
+              </div>
+              <div class="tool-form__group">
+                <label class="tool-form__label" for="login-pass">Password</label>
+                <input class="tool-form__input" type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password" />
+                <div class="tool-form__error" id="login-error">Incorrect username or password.</div>
+              </div>
+              <button type="submit" class="tool-form__btn">
+                Sign In
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </form>
+
+            <p class="tool-login__note">Access restricted to Peoples Property Management team.<br/>Contact Noumena for credentials.</p>
           </div>
-          <h3 class="step__title">Connect Your Tools</h3>
-          <p class="step__text">We integrate with your existing email, property management software, and communication channels — no migration required.</p>
         </div>
 
-        <div class="step-arrow">→</div>
+        <!-- TOOL MAIN -->
+        <div class="tool-main" id="tool-main">
 
-        <div class="step">
-          <div class="step__icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          </div>
-          <h3 class="step__title">We Automate Your Workflows</h3>
-          <p class="step__text">Our AI handles email triage, tenant replies, maintenance routing, rent reminders, and compliance alerts automatically.</p>
-        </div>
+          <!-- Upload & configure -->
+          <div id="tool-upload-screen">
+            <div style="margin-bottom:24px;">
+              <div style="font-size:0.78rem;font-weight:600;color:var(--text-2);letter-spacing:0.04em;margin-bottom:14px;">Invoice Configuration</div>
+              <div class="tool-row">
+                <div>
+                  <label class="tool-form__label">Property</label>
+                  <select class="tool-select" id="prop-select">
+                    <option value="East">City Gate East</option>
+                    <option value="West">City Gate West</option>
+                    <option value="Comms Parking">Comms Parking</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="tool-form__label">Quarter</label>
+                  <select class="tool-select" id="quarter-select">
+                    <option value="2">Q2</option>
+                    <option value="3">Q3</option>
+                    <option value="4">Q4</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="tool-form__label">Year</label>
+                  <input class="tool-form__input" type="number" id="year-input" value="2025" min="2020" max="2099" style="padding:10px 14px;" />
+                </div>
+              </div>
+            </div>
 
-        <div class="step-arrow">→</div>
+            <div style="font-size:0.78rem;font-weight:600;color:var(--text-2);letter-spacing:0.04em;margin-bottom:14px;">Tenant List (.xlsx)</div>
 
-        <div class="step">
-          <div class="step__icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="7" class="clock-min"/><line x1="12" y1="12" x2="15.5" y2="14"/></svg>
-          </div>
-          <h3 class="step__title">You Get Your Time Back</h3>
-          <p class="step__text">Review a clean dashboard each morning. Your properties are running — without you babysitting every step.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+            <div class="tool-drop" id="tool-drop">
+              <input type="file" id="file-input" accept=".xlsx,.xls" />
+              <div class="tool-drop__icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="tool-drop__label">Drop your Excel file here</div>
+              <div class="tool-drop__sub">or click to browse · Columns required: <strong style="color:var(--text-2);">Tenant Name</strong> &amp; <strong style="color:var(--text-2);">Rent Amount</strong></div>
+            </div>
 
-  <div class="gradient-line"></div>
+            <div class="tool-file-info" id="tool-file-info">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span id="file-info-text"><strong>tenants.xlsx</strong> — <span id="tenant-count">0</span> tenants loaded</span>
+              <button class="tool-file-info__clear" id="file-clear" title="Remove file">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
 
-
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- FEATURES                                                 -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <section class="section" id="features">
-    <div class="container">
-      <div class="section-header">
-        <div class="tag">Features</div>
-        <h2 class="section-heading">Everything automated. Nothing missed.</h2>
-        <p class="section-sub">Noumena covers every repetitive task in your day — so you can focus on the decisions that actually require you.</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <span class="feature-card__icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg></span>
-          <h3 class="feature-card__title">Email Triage & Auto-Drafting</h3>
-          <p class="feature-card__text">AI reads, categorises, and drafts responses to incoming emails. You review and approve — or let it run fully automated for routine enquiries.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-card__icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-          <h3 class="feature-card__title">Tenant Communication</h3>
-          <p class="feature-card__text">Consistent, professional responses to tenant queries 24/7. Escalations are flagged immediately so nothing urgent slips through.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-card__icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
-          <h3 class="feature-card__title">Rent Collection & Reminders</h3>
-          <p class="feature-card__text">Automated payment reminders, overdue notices, and escalation sequences. Track rent status across your entire portfolio in one view.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-card__icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
-          <h3 class="feature-card__title">Maintenance Request Routing</h3>
-          <p class="feature-card__text">Tenants submit requests, our system triages urgency, assigns the right contractor, and tracks resolution — end to end.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-card__icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
-          <h3 class="feature-card__title">Compliance Monitoring</h3>
-          <p class="feature-card__text">Never miss a gas certificate, EPC renewal, or inspection deadline. Automated alerts and scheduling keep you permanently compliant.</p>
-        </div>
-
-        <div class="feature-card">
-          <span class="feature-card__icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#12c9a8" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>
-          <h3 class="feature-card__title">Client Dashboard</h3>
-          <p class="feature-card__text">A clean, real-time view of your entire portfolio — occupancy, open issues, payments, and upcoming tasks — in one place.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="gradient-line"></div>
-
-
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- SOCIAL PROOF                                             -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <section class="section section--alt" id="social-proof">
-    <div class="container">
-      <div class="section-header">
-        <div class="tag">Results</div>
-        <h2 class="section-heading">Built for property managers<br />who mean business</h2>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat">
-          <span class="stat__value" data-counter="12" data-suffix="hrs">12hrs</span>
-          <span class="stat__label">Saved per week, per manager</span>
-        </div>
-        <div class="stat">
-          <span class="stat__value" data-counter="94" data-suffix="%">94%</span>
-          <span class="stat__label">Reduction in email response time</span>
-        </div>
-        <div class="stat">
-          <span class="stat__value">0</span>
-          <span class="stat__label">Compliance deadlines missed</span>
-        </div>
-      </div>
-
-      <div class="testimonials">
-        <div class="testimonial">
-          <p class="testimonial__quote">"Before Noumena, I was spending my entire Monday morning just clearing my inbox. Now the AI handles 80% of it before I even sit down. It's like having a really sharp PA who never sleeps."</p>
-          <div class="testimonial__author">
-            <div class="testimonial__avatar" style="font-family:var(--font-serif);font-weight:600;font-size:0.9rem;letter-spacing:0.03em;">SM</div>
-            <div>
-              <div class="testimonial__name">Sarah Mitchell</div>
-              <div class="testimonial__role">Property Manager · 42 units across 8 properties</div>
+            <div id="tool-generate-row" style="display:none;">
+              <button class="tool-form__btn" id="generate-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                Generate Invoices
+              </button>
             </div>
           </div>
-        </div>
 
-        <div class="testimonial">
-          <p class="testimonial__quote">"We used to dread compliance season. Now the system tracks every certificate, sends the reminders, and books the contractors automatically. I can't believe we managed without it."</p>
-          <div class="testimonial__author">
-            <div class="testimonial__avatar" style="font-family:var(--font-serif);font-weight:600;font-size:0.9rem;letter-spacing:0.03em;">JO</div>
-            <div>
-              <div class="testimonial__name">James Okonkwo</div>
-              <div class="testimonial__role">Portfolio Director · 120+ residential units</div>
+          <!-- Progress -->
+          <div class="tool-progress" id="tool-progress">
+            <div class="tool-progress__title">Generating invoices…</div>
+            <div class="tool-progress__sub" id="progress-sub">Preparing tenant data</div>
+            <div class="tool-progress__bar-wrap">
+              <div class="tool-progress__bar-fill" id="progress-bar"></div>
             </div>
+            <div class="tool-progress__counter" id="progress-counter">0 of 0</div>
+            <div class="tool-progress__log" id="progress-log"></div>
+          </div>
+
+          <!-- Complete -->
+          <div class="tool-complete" id="tool-complete">
+            <div class="tool-complete__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="tool-complete__title" id="complete-title">All done!</div>
+            <div class="tool-complete__sub" id="complete-sub">Your invoices are ready to download.</div>
+            <div class="tool-complete__actions">
+              <button class="tool-form__btn" id="download-btn" style="display:inline-flex;justify-content:center;width:auto;padding:12px 28px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download ZIP
+              </button>
+              <button class="btn btn-ghost" id="reset-btn" style="padding:12px 24px;font-size:0.875rem;">Generate Another Batch</button>
+            </div>
+          </div>
+
+        </div><!-- /tool-main -->
+      </div><!-- /tool-window__body -->
+    </div><!-- /tool-window -->
+
+  </div>
+</section>
+
+<div class="rule"></div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+  SOCIAL PROOF
+══════════════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head section-head--center reveal">
+      <div class="eyebrow">Results</div>
+      <h2 class="h2">Built for property managers<br/>who mean business.</h2>
+    </div>
+
+    <div class="stats reveal">
+      <div class="stat">
+        <span class="stat__val" data-counter="12" data-suffix="hrs">12hrs</span>
+        <span class="stat__label">Saved per week, per manager</span>
+      </div>
+      <div class="stat">
+        <span class="stat__val" data-counter="94" data-suffix="%">94%</span>
+        <span class="stat__label">Reduction in email response time</span>
+      </div>
+      <div class="stat">
+        <span class="stat__val">Zero</span>
+        <span class="stat__label">Compliance deadlines missed</span>
+      </div>
+    </div>
+
+    <div class="testimonials reveal">
+      <div class="testimonial">
+        <p class="testimonial__quote">Before Noumena, I was spending my entire Monday morning just clearing my inbox. Now the AI handles 80% of it before I even sit down. It's like having a really sharp PA who never sleeps.</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">SM</div>
+          <div>
+            <div class="testimonial__name">Sarah Mitchell</div>
+            <div class="testimonial__role">Property Manager · 42 units across 8 properties</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <p class="testimonial__quote">We used to dread compliance season. Now the system tracks every certificate, sends the reminders, and books the contractors automatically. I can't believe we managed without it.</p>
+        <div class="testimonial__author">
+          <div class="testimonial__avatar">JO</div>
+          <div>
+            <div class="testimonial__name">James Okonkwo</div>
+            <div class="testimonial__role">Portfolio Director · 120+ residential units</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="gradient-line"></div>
+<div class="rule"></div>
 
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- SERVICES / PRICING                                       -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <section class="section" id="pricing">
-    <div class="container">
-      <div class="section-header">
-        <div class="tag">Services</div>
-        <h2 class="section-heading">Three tiers. One platform.<br /><em style="font-style:italic; color:var(--teal);">Zero</em> admin.</h2>
-        <p class="section-sub">Pick the level that fits your portfolio today. Upgrade any time as you grow — all plans include onboarding and support.</p>
-      </div>
-
-      <div class="pricing-tiers">
-
-        <!-- ── Base ── -->
-        <div class="tier-card">
-          <div class="tier-pill">Base</div>
-          <h3 class="tier-name">Base</h3>
-          <p class="tier-tagline">Dashboard &amp; Overview</p>
-          <div class="tier-divider"></div>
-          <ul class="tier-features">
-            <li>Portfolio overview dashboard</li>
-            <li>Property &amp; unit management</li>
-            <li>Task &amp; maintenance tracking</li>
-            <li>AI email triage &amp; auto-replies</li>
-            <li>Tenant communications hub</li>
-            <li>Basic reporting &amp; deadline alerts</li>
-          </ul>
-          <a href="tel:7804123415" class="tier-cta">Book a Discovery Call</a>
-        </div>
-
-        <!-- ── Boost ── -->
-        <div class="tier-card tier-card--featured">
-          <div class="tier-pill tier-pill--featured">Most Popular</div>
-          <h3 class="tier-name">Boost</h3>
-          <p class="tier-tagline">Cloud Database &amp; Finance</p>
-          <div class="tier-divider"></div>
-          <ul class="tier-features">
-            <li class="tier-inherit">Everything in Base</li>
-            <li>Cloud database — all sites, all docs</li>
-            <li>Categorised &amp; legally compliant storage</li>
-            <li>Banking integrations — Xero-style ledger</li>
-            <li>Financial reporting &amp; reconciliation</li>
-            <li>Compliance document management</li>
-            <li>Multi-property portfolio view</li>
-          </ul>
-          <a href="tel:7804123415" class="tier-cta tier-cta--primary">Book a Discovery Call</a>
-        </div>
-
-        <!-- ── Power ── -->
-        <div class="tier-card">
-          <div class="tier-pill">Power</div>
-          <h3 class="tier-name">Power</h3>
-          <p class="tier-tagline">Full Business Automation</p>
-          <div class="tier-divider"></div>
-          <ul class="tier-features">
-            <li class="tier-inherit">Everything in Boost</li>
-            <li>Tenant self-service logging portal</li>
-            <li>Apple Pay &amp; digital payment collection</li>
-            <li>Automated rent reminders &amp; escalations</li>
-            <li>End-to-end workflow automation</li>
-            <li>White-label client reporting</li>
-            <li>Priority support &amp; dedicated manager</li>
-          </ul>
-          <a href="tel:7804123415" class="tier-cta">Book a Discovery Call</a>
-        </div>
-
-      </div>
-
-      <p style="text-align:center; color:var(--gray-500); font-size:0.83rem; margin-top:32px; line-height:1.7;">
-        Pricing is tailored to portfolio size and scope. &nbsp;
-        <a href="tel:7804123415" style="color:var(--teal); text-decoration:none; border-bottom:1px solid rgba(18,201,168,0.3);">(780) 412-3415</a>
-        &nbsp;and we'll send a custom quote within 48 hours.
-      </p>
+<!-- ══════════════════════════════════════════════════════════════
+  SERVICES / PRICING
+══════════════════════════════════════════════════════════════ -->
+<section class="section section--alt" id="services">
+  <div class="wrap">
+    <div class="section-head section-head--center reveal">
+      <div class="eyebrow">Services</div>
+      <h2 class="h2" style="margin-bottom:16px;">Three tiers. One platform.</h2>
+      <p class="lead">Pick the level that fits your portfolio today. Upgrade any time as you grow — all plans include onboarding and dedicated support.</p>
     </div>
-  </section>
 
-
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- FOOTER                                                   -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__grid">
-        <div>
-          <a href="#" class="nav__logo" style="display:inline-flex; margin-bottom: 4px;">
-            <img src="brand_assets/ea84020a-269d-44c5-bfac-bc064ef6f0c7.JPG" alt="Noumena logo" class="logo-img-sm" />
-            <span class="nav__wordmark" style="font-size:1.2rem; margin-left:8px;">Noumena</span>
-          </a>
-          <p class="footer__brand-desc">AI-powered property management automation. Built for property managers who want their time back.</p>
-        </div>
-
-        <div>
-          <div class="footer__col-title">Product</div>
-          <ul class="footer__links">
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#pricing">Services</a></li>
-            <li><a href="#">Case Studies</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="footer__col-title">Company</div>
-          <ul class="footer__links">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Contact</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="footer__col-title">Contact</div>
-          <ul class="footer__links">
-            <li><a href="tel:7804123415">(780) 412-3415</a></li>
-            <li><a href="mailto:hello@noumenacollective.com">hello@noumenacollective.com</a></li>
-            <li><a href="tel:7804123415">Book a Call</a></li>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-          </ul>
-        </div>
+    <div class="tiers reveal">
+      <div class="tier">
+        <div class="tier__badge">Base</div>
+        <div class="tier__name">Base</div>
+        <div class="tier__sub">Dashboard &amp; Overview</div>
+        <div class="tier__divider"></div>
+        <ul class="tier__features">
+          <li>Portfolio overview dashboard</li>
+          <li>Property &amp; unit management</li>
+          <li>Task &amp; maintenance tracking</li>
+          <li>AI email triage &amp; auto-replies</li>
+          <li>Tenant communications hub</li>
+          <li>Basic reporting &amp; deadline alerts</li>
+        </ul>
+        <a href="tel:7804123415" class="tier__cta">Book a Discovery Call</a>
       </div>
 
-      <div class="footer__bottom">
-        <p class="footer__copy">© 2024 Noumena Collective. All rights reserved.</p>
-        <div class="footer__social">
-          <a href="#" title="LinkedIn">in</a>
-          <a href="#" title="Twitter / X">𝕏</a>
-          <a href="#" title="Email">✉</a>
-        </div>
+      <div class="tier tier--featured">
+        <div class="tier__badge">Most Popular</div>
+        <div class="tier__name">Boost</div>
+        <div class="tier__sub">Cloud Database &amp; Finance</div>
+        <div class="tier__divider"></div>
+        <ul class="tier__features">
+          <li class="inherit">Everything in Base</li>
+          <li>Cloud database — all sites, all docs</li>
+          <li>Categorised &amp; legally compliant storage</li>
+          <li>Banking integrations — Xero-style ledger</li>
+          <li>Financial reporting &amp; reconciliation</li>
+          <li>Compliance document management</li>
+          <li>Multi-property portfolio view</li>
+        </ul>
+        <a href="tel:7804123415" class="tier__cta tier__cta--primary">Book a Discovery Call</a>
+      </div>
+
+      <div class="tier">
+        <div class="tier__badge">Power</div>
+        <div class="tier__name">Power</div>
+        <div class="tier__sub">Full Business Automation</div>
+        <div class="tier__divider"></div>
+        <ul class="tier__features">
+          <li class="inherit">Everything in Boost</li>
+          <li>Tenant self-service logging portal</li>
+          <li>Apple Pay &amp; digital payment collection</li>
+          <li>Automated rent reminders &amp; escalations</li>
+          <li>End-to-end workflow automation</li>
+          <li>White-label client reporting</li>
+          <li>Priority support &amp; dedicated manager</li>
+        </ul>
+        <a href="tel:7804123415" class="tier__cta">Book a Discovery Call</a>
       </div>
     </div>
-  </footer>
+
+    <p class="pricing-note reveal">
+      Pricing is tailored to portfolio size and scope. Call us at
+      <a href="tel:7804123415">(780) 412-3415</a>
+      and we'll send a custom quote within 48 hours.
+    </p>
+  </div>
+</section>
 
 
-  <script>
-    /* ═══════════════════════════════════════════════════════ */
-    /* Noumena — Animation Engine                              */
-    /* ═══════════════════════════════════════════════════════ */
+<!-- ══════════════════════════════════════════════════════════════
+  FOOTER
+══════════════════════════════════════════════════════════════ -->
+<footer class="footer" id="contact">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="#" class="logo" style="margin-bottom:6px;">
+          <svg class="logo-mark" viewBox="0 0 22 28" fill="none" style="width:18px;height:22px;">
+            <path d="M2.5 25.5V2.5L19.5 25.5V2.5" stroke="#8B5CF6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="logo-word" style="font-size:0.85rem;">Noumena</span>
+        </a>
+        <p>AI-powered property management automation. Built for managers who want their time back.</p>
+      </div>
 
-    /* ─ 1. Nav scroll + scroll-hint fade ────────────────── */
-    const navbar = document.getElementById('navbar');
-    const scrollHint = document.querySelector('.hero__scroll');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-      if (scrollHint) scrollHint.style.opacity = window.scrollY > 100 ? '0' : '1';
-    }, { passive: true });
+      <div>
+        <div class="footer__col-title">Platform</div>
+        <ul class="footer__links">
+          <li><a href="#platform">How It Works</a></li>
+          <li><a href="#platform">Features</a></li>
+          <li><a href="#invoice">Invoice App</a></li>
+          <li><a href="#services">Services</a></li>
+        </ul>
+      </div>
 
-    /* ─ 2. Scroll reveal with stagger ───────────────────── */
-    const revealSelectors = [
-      '.section-header', '.pain-card', '.step',
-      '.feature-card', '.stats-row', '.testimonial', '.tier-card'
-    ];
-    const revealEls = document.querySelectorAll(revealSelectors.join(', '));
-    revealEls.forEach(el => el.classList.add('reveal'));
+      <div>
+        <div class="footer__col-title">Company</div>
+        <ul class="footer__links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
 
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const siblings = [...(entry.target.parentNode?.children || [])]
-          .filter(c => c.classList.contains('reveal'));
-        const idx = siblings.indexOf(entry.target);
-        entry.target.style.transitionDelay = idx > 0 ? `${idx * 0.09}s` : '0s';
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+      <div>
+        <div class="footer__col-title">Contact</div>
+        <ul class="footer__links">
+          <li><a href="tel:7804123415">(780) 412-3415</a></li>
+          <li><a href="mailto:hello@noumenacollective.com">hello@noumenacollective.com</a></li>
+          <li><a href="tel:7804123415">Book a Call</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
 
-    revealEls.forEach(el => revealObserver.observe(el));
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2025 Noumena Collective. All rights reserved.</p>
+      <div class="footer__social">
+        <a href="#" title="LinkedIn">in</a>
+        <a href="#" title="X / Twitter">𝕏</a>
+        <a href="mailto:hello@noumenacollective.com" title="Email">✉</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
-    /* ─ 3. Animated stat counters ────────────────────────── */
-    const counters = document.querySelectorAll('[data-counter]');
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const target = parseInt(el.dataset.counter, 10);
-        const suffix = el.dataset.suffix || '';
-        const duration = 1800;
-        const startTime = performance.now();
-        const easeOut = t => 1 - Math.pow(1 - t, 3);
-        const tick = (now) => {
-          const t = Math.min((now - startTime) / duration, 1);
-          el.textContent = Math.floor(easeOut(t) * target) + suffix;
-          if (t < 1) requestAnimationFrame(tick);
-          else el.textContent = target + suffix;
-        };
-        requestAnimationFrame(tick);
-        counterObserver.unobserve(el);
-      });
-    }, { threshold: 0.5 });
 
-    counters.forEach(el => counterObserver.observe(el));
+<!-- ══════════════════════════════════════════════════════════════
+  SCRIPTS
+══════════════════════════════════════════════════════════════ -->
+<script>
+/* ─── Nav scroll ─────────────────────────────────────────────── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 32);
+}, { passive: true });
 
-    /* ─ 4. Particle canvas in hero ───────────────────────── */
-    const canvas = document.getElementById('hero-canvas');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      const dpr = Math.min(devicePixelRatio, 2);
+/* ─── Scroll reveal ──────────────────────────────────────────── */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const siblings = [...(entry.target.parentNode?.children || [])].filter(c => c.classList.contains('reveal'));
+    const idx = siblings.indexOf(entry.target);
+    entry.target.style.transitionDelay = idx > 0 ? `${Math.min(idx * 0.07, 0.35)}s` : '0s';
+    entry.target.classList.add('in');
+    revealObs.unobserve(entry.target);
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
 
-      const resize = () => {
-        const w = canvas.offsetWidth;
-        const h = canvas.offsetHeight;
-        canvas.width  = w * dpr;
-        canvas.height = h * dpr;
-        ctx.scale(dpr, dpr);
-      };
-      resize();
-      window.addEventListener('resize', resize, { passive: true });
+/* ─── Stat counters ──────────────────────────────────────────── */
+document.querySelectorAll('[data-counter]').forEach(el => {
+  const obs = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    const target = parseInt(el.dataset.counter, 10);
+    const suffix = el.dataset.suffix || '';
+    const dur = 1600;
+    const start = performance.now();
+    const ease = t => 1 - Math.pow(1 - t, 3);
+    const tick = now => {
+      const t = Math.min((now - start) / dur, 1);
+      el.textContent = Math.floor(ease(t) * target) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = target + suffix;
+    };
+    requestAnimationFrame(tick);
+    obs.unobserve(el);
+  }, { threshold: 0.5 });
+  obs.observe(el);
+});
 
-      const W = () => canvas.offsetWidth;
-      const H = () => canvas.offsetHeight;
+/* ─── Invoice App ────────────────────────────────────────────── */
+// Credentials — change these to match your team's login
+const USERS = { 'noumena': 'CityGate2025', 'peoples': 'PropMgmt2025' };
 
-      /* Two types: small dots and faint connecting lines */
-      const particles = Array.from({ length: 80 }, () => ({
-        x:     Math.random() * W(),
-        y:     Math.random() * H(),
-        r:     Math.random() * 1.5 + 0.3,
-        vx:    (Math.random() - 0.5) * 0.22,
-        vy:    (Math.random() - 0.5) * 0.22,
-        alpha: Math.random() * 0.55 + 0.1,
-        phase: Math.random() * Math.PI * 2,
-      }));
+let tenantData   = [];
+let zipBlob      = null;
+let currentUser  = null;
 
-      const draw = () => {
-        ctx.clearRect(0, 0, W(), H());
-        /* Draw faint connection lines for close particles */
-        for (let i = 0; i < particles.length; i++) {
-          for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 90) {
-              ctx.beginPath();
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.strokeStyle = `rgba(18,201,168,${0.06 * (1 - dist / 90)})`;
-              ctx.lineWidth = 0.5;
-              ctx.stroke();
-            }
-          }
-        }
-        /* Draw particles */
-        particles.forEach(p => {
-          p.phase += 0.012;
-          const a = p.alpha * (0.55 + 0.45 * Math.sin(p.phase));
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(18,201,168,${a})`;
-          ctx.fill();
-          /* move & wrap */
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < 0) p.x = W();
-          else if (p.x > W()) p.x = 0;
-          if (p.y < 0) p.y = H();
-          else if (p.y > H()) p.y = 0;
-        });
-        requestAnimationFrame(draw);
-      };
-      requestAnimationFrame(draw);
-    }
+const loginWrap   = document.getElementById('tool-login-wrap');
+const toolMain    = document.getElementById('tool-main');
+const loginForm   = document.getElementById('login-form');
+const loginError  = document.getElementById('login-error');
+const userDisplay = document.getElementById('tool-user-display');
+const userName    = document.getElementById('tool-user-name');
 
-    /* ─ 5. Cursor spotlight on hero ─────────────────────── */
-    const heroSection  = document.getElementById('hero');
-    const spotlightEl  = document.getElementById('hero-spotlight');
-    if (heroSection && spotlightEl) {
-      let spotX = 0, spotY = 0, curX = 0, curY = 0;
-      heroSection.addEventListener('mousemove', (e) => {
-        const r = heroSection.getBoundingClientRect();
-        curX = e.clientX - r.left;
-        curY = e.clientY - r.top;
-        spotlightEl.style.opacity = '1';
-      }, { passive: true });
-      heroSection.addEventListener('mouseleave', () => {
-        spotlightEl.style.opacity = '0';
-      });
-      /* Smooth lag follow */
-      const followSpot = () => {
-        spotX += (curX - spotX) * 0.07;
-        spotY += (curY - spotY) * 0.07;
-        spotlightEl.style.left = spotX + 'px';
-        spotlightEl.style.top  = spotY + 'px';
-        requestAnimationFrame(followSpot);
-      };
-      requestAnimationFrame(followSpot);
-    }
+/* Login */
+loginForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const u = document.getElementById('login-user').value.trim().toLowerCase();
+  const p = document.getElementById('login-pass').value;
+  if (USERS[u] && USERS[u] === p) {
+    loginError.classList.remove('visible');
+    loginWrap.classList.add('hidden');
+    toolMain.classList.add('active');
+    currentUser = u;
+    userName.textContent = u;
+    userDisplay.style.display = 'flex';
+  } else {
+    loginError.classList.add('visible');
+    document.getElementById('login-pass').value = '';
+  }
+});
 
-    /* ─ 6. Card 3D tilt ─────────────────────────────────── */
-    document.querySelectorAll('.pain-card, .feature-card, .tier-card').forEach(card => {
-      card.style.transition = 'border-color 0.25s, box-shadow 0.25s, transform 0.15s ease-out';
-      card.addEventListener('mousemove', (e) => {
-        const r   = card.getBoundingClientRect();
-        const x   = ((e.clientX - r.left) / r.width  - 0.5) * 10;
-        const y   = ((e.clientY - r.top)  / r.height - 0.5) * 10;
-        card.style.transform = `perspective(900px) rotateX(${-y}deg) rotateY(${x}deg) translateY(-4px)`;
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-      });
-    });
+/* File upload */
+const fileInput   = document.getElementById('file-input');
+const toolDrop    = document.getElementById('tool-drop');
+const fileInfo    = document.getElementById('tool-file-info');
+const tenantCount = document.getElementById('tenant-count');
+const generateRow = document.getElementById('tool-generate-row');
 
-    /* ─ 7. Live activity feed mockup ────────────────────────── */
-    const feed = document.getElementById('mockup-feed');
-    if (feed) {
-      const activities = [
-        { type: 'done',       badge: '✓', text: 'Email from T. Hartley triaged & replied',   age: 'just now' },
-        { type: 'done',       badge: '✓', text: 'Rent reminder sent — 6 tenants',             age: '2m ago'   },
-        { type: 'processing', badge: '↻', text: 'Maintenance #18 routing to plumber',         age: 'now'      },
-        { type: 'done',       badge: '✓', text: 'Gas cert renewal scheduled — Unit 4B',       age: '8m ago'   },
-        { type: 'processing', badge: '↻', text: 'Drafting lease renewal for J. Okonkwo',      age: 'now'      },
-        { type: 'done',       badge: '✓', text: 'Late payment escalation sent — Unit 7',      age: '14m ago'  },
-        { type: 'done',       badge: '✓', text: 'Inspection report filed — 22 Brook St',      age: '21m ago'  },
-        { type: 'processing', badge: '↻', text: 'Compliance check — EPC renewals due',        age: 'now'      },
-        { type: 'done',       badge: '✓', text: '3 maintenance tickets auto-closed',          age: '31m ago'  },
-        { type: 'done',       badge: '✓', text: 'Portfolio summary emailed to client',        age: '45m ago'  },
-      ];
-      let pool = [...activities];
-      let shown = [];
-      const MAX = 3;
-      const doneSVG = `<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#12c9a8" stroke-opacity="0.5"/><path d="M3.5 6l1.8 1.8L8.5 4.5" stroke="#12c9a8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-      const renderFeed = () => {
-        feed.innerHTML = '';
-        shown.forEach((item, i) => {
-          const el = document.createElement('div');
-          el.className = `mockup-item mockup-item--${item.type}`;
-          el.style.animationDelay = `${i * 0.07}s`;
-          el.innerHTML = item.type === 'processing'
-            ? `<span class="mockup-item__badge" style="background:transparent;padding:0;"><span class="mockup-spinner"></span></span><span class="mockup-item__text">${item.text}</span><span class="mockup-item__age">${item.age}</span>`
-            : `<span class="mockup-item__badge">${doneSVG}</span><span class="mockup-item__text">${item.text}</span><span class="mockup-item__age">${item.age}</span>`;
-          feed.appendChild(el);
-        });
-      };
-      const tick = () => {
-        if (!pool.length) pool = [...activities];
-        const next = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-        shown.unshift(next);
-        if (shown.length > MAX) shown.pop();
-        renderFeed();
-      };
-      tick(); tick(); tick();
-      setInterval(tick, 2800);
-    }
+toolDrop.addEventListener('dragover', e => { e.preventDefault(); toolDrop.classList.add('drag-over'); });
+toolDrop.addEventListener('dragleave', () => toolDrop.classList.remove('drag-over'));
+toolDrop.addEventListener('drop', e => {
+  e.preventDefault();
+  toolDrop.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
 
-    /* ─ 8. Magnetic buttons ─────────────────────────────── */
-    document.querySelectorAll('.btn-primary').forEach(btn => {
-      /* store original transition */
-      const origTrans = btn.style.transition;
-      btn.addEventListener('mousemove', (e) => {
-        const r  = btn.getBoundingClientRect();
-        const ox = (e.clientX - r.left - r.width  / 2) * 0.28;
-        const oy = (e.clientY - r.top  - r.height / 2) * 0.28;
-        btn.style.transition = 'transform 0.1s ease, box-shadow 0.22s ease, background 0.22s ease';
-        btn.style.transform  = `translate(${ox}px, ${oy}px)`;
-      });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, background 0.22s ease';
-        btn.style.transform  = '';
-      });
-    });
-  </script>
+function handleFile(file) {
+  if (!file.name.match(/\.xlsx?$/i)) {
+    alert('Please upload a .xlsx Excel file.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      if (!window.XLSX) { loadLibraries().then(() => parseXLSX(e.target.result, file.name)); }
+      else parseXLSX(e.target.result, file.name);
+    } catch(err) { alert('Error reading file: ' + err.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseXLSX(buffer, fileName) {
+  const wb = XLSX.read(buffer, { type: 'array' });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+  if (!rows.length) { alert('No data found in the spreadsheet.'); return; }
+  const firstRow = rows[0];
+  const nameKey   = Object.keys(firstRow).find(k => /tenant.*name/i.test(k) || /name/i.test(k));
+  const amountKey = Object.keys(firstRow).find(k => /rent.*amount/i.test(k) || /amount/i.test(k));
+  if (!nameKey || !amountKey) {
+    alert('Could not find "Tenant Name" and "Rent Amount" columns. Please check your spreadsheet headers.');
+    return;
+  }
+  tenantData = rows.filter(r => r[nameKey]).map((r, i) => ({
+    name:   String(r[nameKey]).trim(),
+    amount: parseFloat(String(r[amountKey]).replace(/[^0-9.]/g, '')) || 0,
+    index:  i + 1
+  }));
+  document.getElementById('file-info-text').innerHTML =
+    `<strong>${fileName}</strong> — <span id="tenant-count">${tenantData.length}</span> tenants loaded`;
+  fileInfo.classList.add('visible');
+  generateRow.style.display = 'block';
+}
+
+document.getElementById('file-clear').addEventListener('click', () => {
+  tenantData = [];
+  fileInput.value = '';
+  fileInfo.classList.remove('visible');
+  generateRow.style.display = 'none';
+});
+
+/* Generate */
+document.getElementById('generate-btn').addEventListener('click', async () => {
+  if (!tenantData.length) return;
+  const prop    = document.getElementById('prop-select').value;
+  const quarter = parseInt(document.getElementById('quarter-select').value);
+  const year    = parseInt(document.getElementById('year-input').value);
+
+  // Show progress
+  document.getElementById('tool-upload-screen').style.display = 'none';
+  const progressEl = document.getElementById('tool-progress');
+  progressEl.classList.add('active');
+
+  try {
+    await loadLibraries();
+    await generateAll(prop, quarter, year);
+  } catch(err) {
+    alert('Error generating invoices: ' + err.message);
+    resetToUpload();
+  }
+});
+
+async function generateAll(prop, quarter, year) {
+  const bar      = document.getElementById('progress-bar');
+  const counter  = document.getElementById('progress-counter');
+  const sub      = document.getElementById('progress-sub');
+  const logEl    = document.getElementById('progress-log');
+  const total    = tenantData.length;
+  const zip      = new JSZip();
+  const propCode = prop === 'East' ? 'CGE' : prop === 'West' ? 'CGW' : 'CGC';
+
+  for (let i = 0; i < total; i++) {
+    const tenant = tenantData[i];
+    sub.textContent = `Generating invoice for ${tenant.name}…`;
+    counter.textContent = `${i + 1} of ${total}`;
+    bar.style.width = `${((i + 1) / total) * 100}%`;
+
+    // Log item
+    const li = document.createElement('div');
+    li.className = 'tool-progress__log-item';
+    li.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>${tenant.name}`;
+    logEl.prepend(li);
+
+    const pdf = buildInvoicePDF(tenant, prop, propCode, quarter, year, i + 1);
+    const pdfBytes = pdf.output('arraybuffer');
+    const safeName = tenant.name.replace(/[^a-z0-9]/gi, '_');
+    zip.file(`${propCode}_Q${quarter}_${year}_${String(i+1).padStart(3,'0')}_${safeName}.pdf`, pdfBytes);
+
+    // Yield to browser every 5 invoices
+    if (i % 5 === 4) await new Promise(r => setTimeout(r, 0));
+  }
+
+  const blob = await zip.generateAsync({ type: 'blob' });
+  zipBlob = blob;
+  const zipName = `Noumena_CityGate${prop}_Q${quarter}_${year}_Invoices.zip`;
+
+  // Complete
+  document.getElementById('tool-progress').classList.remove('active');
+  const completeEl = document.getElementById('tool-complete');
+  completeEl.classList.add('active');
+  document.getElementById('complete-title').textContent = `${total} invoices generated`;
+  document.getElementById('complete-sub').textContent = `City Gate ${prop} · Q${quarter} ${year} · Ready to download`;
+
+  document.getElementById('download-btn').onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = zipName;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+}
+
+function buildInvoicePDF(tenant, prop, propCode, quarter, year, num) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const W = 210, H = 297;
+
+  const quarterDates = {
+    1: `January – March ${year}`,
+    2: `April – June ${year}`,
+    3: `July – September ${year}`,
+    4: `October – December ${year}`
+  };
+  const refNum = `${propCode}-Q${quarter}-${year}-${String(num).padStart(3,'0')}`;
+  const today  = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  const propFull = `City Gate ${prop}`;
+
+  // ── Header bar ──────────────────────────────────────────────
+  doc.setFillColor(8, 9, 16);
+  doc.rect(0, 0, W, 32, 'F');
+
+  // Accent top strip
+  doc.setFillColor(139, 92, 246);
+  doc.rect(0, 0, W, 2, 'F');
+
+  // N mark (drawn with lines)
+  doc.setDrawColor(139, 92, 246);
+  doc.setLineWidth(1.4);
+  doc.line(W - 28, 8, W - 28, 26);
+  doc.line(W - 28, 8, W - 14, 26);
+  doc.line(W - 14, 8, W - 14, 26);
+
+  // Company name
+  doc.setTextColor(255, 255, 255);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('PEOPLES PROPERTY MANAGEMENT', 12, 15);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(160, 180, 200);
+  doc.text('City Gate Properties · Managed by Noumena', 12, 22);
+  doc.text('Service Charge Administration', 12, 28);
+
+  // ── Title ───────────────────────────────────────────────────
+  doc.setTextColor(8, 9, 16);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(17);
+  doc.text('SERVICE CHARGE DEMAND', W / 2, 46, { align: 'center' });
+
+  doc.setDrawColor(200, 205, 215);
+  doc.setLineWidth(0.4);
+  doc.line(12, 51, W - 12, 51);
+
+  // ── Details grid ────────────────────────────────────────────
+  let y = 60;
+  doc.setFontSize(9);
+  const labelX = 12, valX = 52;
+
+  const details = [
+    ['Property:', propFull],
+    ['Quarter:', `Q${quarter} ${year} (${quarterDates[quarter]})`],
+    ['Reference:', refNum],
+    ['Date Issued:', today],
+  ];
+
+  details.forEach(([label, val]) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(80, 90, 110);
+    doc.text(label, labelX, y);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(20, 25, 40);
+    doc.text(val, valX, y);
+    y += 8;
+  });
+
+  doc.setDrawColor(215, 220, 228);
+  doc.setLineWidth(0.35);
+  doc.line(12, y + 2, W - 12, y + 2);
+
+  // ── To: tenant ──────────────────────────────────────────────
+  y += 12;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(80, 90, 110);
+  doc.text('TO:', labelX, y);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.setTextColor(8, 9, 40);
+  doc.text(tenant.name, labelX, y + 8);
+
+  doc.setDrawColor(215, 220, 228);
+  doc.setLineWidth(0.35);
+  doc.line(12, y + 14, W - 12, y + 14);
+
+  // ── Body letter ─────────────────────────────────────────────
+  y += 24;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9.5);
+  doc.setTextColor(40, 45, 60);
+  doc.text(`Dear ${tenant.name},`, labelX, y);
+
+  y += 9;
+  const bodyText = `Please find enclosed your service charge demand for ${propFull} for Q${quarter} ${year} (${quarterDates[quarter]}). This demand is issued in accordance with the terms of your lease agreement and covers your proportionate share of the costs of managing, maintaining, and insuring the common parts of the building.`;
+  const splitBody = doc.splitTextToSize(bodyText, W - 28);
+  doc.text(splitBody, labelX, y);
+  y += splitBody.length * 5.5 + 6;
+
+  // ── Amount box ──────────────────────────────────────────────
+  doc.setFillColor(245, 248, 252);
+  doc.roundedRect(12, y, W - 24, 30, 2, 2, 'F');
+  doc.setDrawColor(195, 210, 230);
+  doc.setLineWidth(0.4);
+  doc.roundedRect(12, y, W - 24, 30, 2, 2, 'S');
+
+  // Left accent strip
+  doc.setFillColor(139, 92, 246);
+  doc.roundedRect(12, y, 3, 30, 1, 1, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(60, 80, 110);
+  doc.text('SERVICE CHARGE AMOUNT:', 22, y + 12);
+
+  const formatted = `£${parseFloat(tenant.amount).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(8, 9, 40);
+  doc.text(formatted, W - 16, y + 14, { align: 'right' });
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(100, 115, 140);
+  doc.text('Payment is due within 30 days of this notice.', 22, y + 24);
+
+  y += 38;
+
+  // ── Payment details ─────────────────────────────────────────
+  doc.setDrawColor(215, 220, 228);
+  doc.setLineWidth(0.35);
+  doc.line(12, y, W - 12, y);
+  y += 10;
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(8, 9, 40);
+  doc.text('PAYMENT DETAILS', labelX, y);
+  y += 8;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(60, 70, 90);
+  doc.text('Please make payment using one of the following methods:', labelX, y);
+  y += 10;
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.text('Bank Transfer:', labelX, y);
+  y += 7;
+
+  const bankDetails = [
+    ['Account Name:', 'Peoples Property Management Ltd'],
+    ['Sort Code:', '20-00-00'],
+    ['Account Number:', '12345678'],
+    ['Payment Reference:', refNum],
+  ];
+  bankDetails.forEach(([label, val]) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(80, 90, 110);
+    doc.text(label, labelX + 4, y);
+    doc.setFont('helvetica', label === 'Payment Reference:' ? 'bold' : 'normal');
+    doc.setTextColor(label === 'Payment Reference:' ? 8 : 40, label === 'Payment Reference:' ? 9 : 50, label === 'Payment Reference:' ? 40 : 70);
+    doc.text(val, 72, y);
+    y += 6.5;
+  });
+
+  y += 4;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(80, 90, 110);
+  doc.text('Cheque:', labelX, y);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(40, 50, 70);
+  doc.text('Payable to "Peoples Property Management Ltd"', labelX + 4, y + 6.5);
+
+  // ── Footer ──────────────────────────────────────────────────
+  doc.setDrawColor(200, 208, 218);
+  doc.setLineWidth(0.35);
+  doc.line(12, 262, W - 12, 262);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(120, 130, 150);
+  const footerText = 'For queries regarding this demand, please contact our accounts team. This is a formal service charge demand issued under the terms of your lease. Peoples Property Management Ltd — Registered in England and Wales.';
+  const splitFooter = doc.splitTextToSize(footerText, W - 24);
+  doc.text(splitFooter, labelX, 268);
+
+  // Bottom bar
+  doc.setFillColor(8, 9, 16);
+  doc.rect(0, 283, W, 14, 'F');
+  doc.setFillColor(139, 92, 246);
+  doc.rect(0, 295, W, 2, 'F');
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(6.5);
+  doc.setTextColor(100, 120, 150);
+  doc.text('Peoples Property Management · City Gate Properties · Invoice automation powered by Noumena', W / 2, 291, { align: 'center' });
+
+  return doc;
+}
+
+/* Reset tool to upload screen */
+function resetToUpload() {
+  tenantData = [];
+  zipBlob = null;
+  fileInput.value = '';
+  fileInfo.classList.remove('visible');
+  generateRow.style.display = 'none';
+  document.getElementById('progress-log').innerHTML = '';
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('tool-progress').classList.remove('active');
+  document.getElementById('tool-complete').classList.remove('active');
+  document.getElementById('tool-upload-screen').style.display = 'block';
+}
+
+document.getElementById('reset-btn').addEventListener('click', resetToUpload);
+
+/* Lazy load libraries */
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error(`Failed to load: ${src}`));
+    document.head.appendChild(s);
+  });
+}
+
+function loadLibraries() {
+  return Promise.all([
+    loadScript('https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js'),
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'),
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js'),
+  ]);
+}
+
+/* Preload libs when user reaches the invoice section */
+const invoiceSection = document.getElementById('invoice');
+const preloadObs = new IntersectionObserver(([entry]) => {
+  if (entry.isIntersecting) { loadLibraries().catch(() => {}); preloadObs.disconnect(); }
+}, { threshold: 0.1 });
+preloadObs.observe(invoiceSection);
+
+/* ─── Mobile nav drawer ──────────────────────────────────────── */
+const burger    = document.getElementById('burger');
+const drawer    = document.getElementById('nav-drawer');
+const overlay   = document.getElementById('nav-overlay');
+const navClose  = document.getElementById('nav-close');
+
+function openDrawer() {
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  burger.classList.add('is-open');
+  burger.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  burger.classList.remove('is-open');
+  burger.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+burger.addEventListener('click', () => {
+  drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+});
+navClose.addEventListener('click', closeDrawer);
+overlay.addEventListener('click', closeDrawer);
+
+/* Close drawer on any link click inside it */
+document.querySelectorAll('.drawer-link').forEach(link => {
+  link.addEventListener('click', closeDrawer);
+});
+
+/* Close drawer on Escape key */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+});
+</script>
 
 </body>
 </html>
