@@ -2281,25 +2281,25 @@ function buildInvoicePDF(tenant, prop, propCode, quarter, year, num) {
   // ── Footer — fixed position ───────────────────────────────────
   doc.setDrawColor(200, 208, 218);
   doc.setLineWidth(0.35);
-  doc.line(12, 256, W - 12, 256);
+  doc.line(12, 270, W - 12, 270);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(120, 130, 150);
   const footerText = 'For queries regarding this demand, please contact our accounts team. This is a formal service charge demand issued under the terms of your lease. Peoples Property Management Ltd — Registered in England and Wales.';
   const splitFooter = doc.splitTextToSize(footerText, W - 24);
-  doc.text(splitFooter, labelX, 262);
+  doc.text(splitFooter, labelX, 276);
 
   // Bottom bar
   doc.setFillColor(8, 9, 16);
-  doc.rect(0, 277, W, 14, 'F');
+  doc.rect(0, 285, W, 10, 'F');
   doc.setFillColor(139, 92, 246);
-  doc.rect(0, 291, W, 2, 'F');
+  doc.rect(0, 295, W, 2, 'F');
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.5);
   doc.setTextColor(100, 120, 150);
-  doc.text('Peoples Property Management · City Gate Properties · Invoice automation powered by Noumena', W / 2, 286, { align: 'center' });
+  doc.text('Peoples Property Management · City Gate Properties · Invoice automation powered by Noumena', W / 2, 292, { align: 'center' });
 
   return doc;
 }
