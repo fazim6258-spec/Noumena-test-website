@@ -1654,10 +1654,18 @@
               </button>
             </div>
 
+            <!-- Library status indicator -->
+            <div id="lib-status" style="display:none; align-items:center; gap:8px; font-size:0.75rem; color:var(--text-2); margin-bottom:14px; padding:9px 14px; background:var(--bg-3); border:1px solid var(--line); border-radius:var(--r-md);">
+              <svg id="lib-spinner" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="animation:spin360 0.8s linear infinite; flex-shrink:0;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+              <svg id="lib-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" style="display:none; flex-shrink:0;"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="lib-status-text">Loading PDF engine…</span>
+            </div>
+            <style>@keyframes spin360{to{transform:rotate(360deg)}}</style>
+
             <div id="tool-generate-row" style="display:none;">
-              <button class="tool-form__btn" id="generate-btn">
+              <button class="tool-form__btn" id="generate-btn" disabled style="opacity:0.5; cursor:not-allowed;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                Generate Invoices
+                <span id="generate-btn-text">Loading engine…</span>
               </button>
             </div>
           </div>
@@ -2197,107 +2205,101 @@ function buildInvoicePDF(tenant, prop, propCode, quarter, year, num) {
   const bodyText = `Please find enclosed your service charge demand for ${propFull} for Q${quarter} ${year} (${quarterDates[quarter]}). This demand is issued in accordance with the terms of your lease agreement and covers your proportionate share of the costs of managing, maintaining, and insuring the common parts of the building.`;
   const splitBody = doc.splitTextToSize(bodyText, W - 28);
   doc.text(splitBody, labelX, y);
-  y += splitBody.length * 5.5 + 6;
 
-  // ── Amount box ──────────────────────────────────────────────
+  // ── Amount box — fixed position so nothing can overlap below ──
+  const amountY = 148;
   doc.setFillColor(245, 248, 252);
-  doc.roundedRect(12, y, W - 24, 30, 2, 2, 'F');
+  doc.roundedRect(12, amountY, W - 24, 30, 2, 2, 'F');
   doc.setDrawColor(195, 210, 230);
   doc.setLineWidth(0.4);
-  doc.roundedRect(12, y, W - 24, 30, 2, 2, 'S');
+  doc.roundedRect(12, amountY, W - 24, 30, 2, 2, 'S');
 
-  // Left accent strip
   doc.setFillColor(139, 92, 246);
-  doc.roundedRect(12, y, 3, 30, 1, 1, 'F');
+  doc.roundedRect(12, amountY, 3, 30, 1, 1, 'F');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(60, 80, 110);
-  doc.text('SERVICE CHARGE AMOUNT:', 22, y + 12);
+  doc.text('SERVICE CHARGE AMOUNT:', 22, amountY + 12);
 
   const formatted = `£${parseFloat(tenant.amount).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
   doc.setTextColor(8, 9, 40);
-  doc.text(formatted, W - 16, y + 14, { align: 'right' });
+  doc.text(formatted, W - 16, amountY + 16, { align: 'right' });
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(100, 115, 140);
-  doc.text('Payment is due within 30 days of this notice.', 22, y + 24);
+  doc.text('Payment is due within 30 days of this notice.', 22, amountY + 25);
 
-  y += 38;
-
-  // ── Payment details ─────────────────────────────────────────
+  // ── Payment details — fixed position ─────────────────────────
+  const payY = 190;
   doc.setDrawColor(215, 220, 228);
   doc.setLineWidth(0.35);
-  doc.line(12, y, W - 12, y);
-  y += 10;
+  doc.line(12, payY, W - 12, payY);
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(8, 9, 40);
-  doc.text('PAYMENT DETAILS', labelX, y);
-  y += 8;
+  doc.text('PAYMENT DETAILS', labelX, payY + 10);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(60, 70, 90);
-  doc.text('Please make payment using one of the following methods:', labelX, y);
-  y += 10;
+  doc.text('Please make payment using one of the following methods:', labelX, payY + 19);
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8.5);
-  doc.text('Bank Transfer:', labelX, y);
-  y += 7;
-
-  const bankDetails = [
-    ['Account Name:', 'Peoples Property Management Ltd'],
-    ['Sort Code:', '20-00-00'],
-    ['Account Number:', '12345678'],
-    ['Payment Reference:', refNum],
-  ];
-  bankDetails.forEach(([label, val]) => {
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(80, 90, 110);
-    doc.text(label, labelX + 4, y);
-    doc.setFont('helvetica', label === 'Payment Reference:' ? 'bold' : 'normal');
-    doc.setTextColor(label === 'Payment Reference:' ? 8 : 40, label === 'Payment Reference:' ? 9 : 50, label === 'Payment Reference:' ? 40 : 70);
-    doc.text(val, 72, y);
-    y += 6.5;
-  });
-
-  y += 4;
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8.5);
   doc.setTextColor(80, 90, 110);
-  doc.text('Cheque:', labelX, y);
+  doc.text('Bank Transfer:', labelX, payY + 29);
+
+  const bankDetails = [
+    ['Account Name:',      'Peoples Property Management Ltd'],
+    ['Sort Code:',         '20-00-00'],
+    ['Account Number:',    '12345678'],
+    ['Payment Reference:', refNum],
+  ];
+  bankDetails.forEach(([label, val], i) => {
+    const rowY = payY + 37 + i * 7;
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(80, 90, 110);
+    doc.text(label, labelX + 4, rowY);
+    doc.setFont('helvetica', label === 'Payment Reference:' ? 'bold' : 'normal');
+    doc.setTextColor(label === 'Payment Reference:' ? 30 : 40, label === 'Payment Reference:' ? 20 : 50, label === 'Payment Reference:' ? 80 : 70);
+    doc.text(val, 72, rowY);
+  });
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(80, 90, 110);
+  doc.text('Cheque:', labelX, payY + 66);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(40, 50, 70);
-  doc.text('Payable to "Peoples Property Management Ltd"', labelX + 4, y + 6.5);
+  doc.text('Payable to "Peoples Property Management Ltd"', labelX + 4, payY + 73);
 
-  // ── Footer ──────────────────────────────────────────────────
+  // ── Footer — fixed position ───────────────────────────────────
   doc.setDrawColor(200, 208, 218);
   doc.setLineWidth(0.35);
-  doc.line(12, 262, W - 12, 262);
+  doc.line(12, 256, W - 12, 256);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(120, 130, 150);
   const footerText = 'For queries regarding this demand, please contact our accounts team. This is a formal service charge demand issued under the terms of your lease. Peoples Property Management Ltd — Registered in England and Wales.';
   const splitFooter = doc.splitTextToSize(footerText, W - 24);
-  doc.text(splitFooter, labelX, 268);
+  doc.text(splitFooter, labelX, 262);
 
   // Bottom bar
   doc.setFillColor(8, 9, 16);
-  doc.rect(0, 283, W, 14, 'F');
+  doc.rect(0, 277, W, 14, 'F');
   doc.setFillColor(139, 92, 246);
-  doc.rect(0, 295, W, 2, 'F');
+  doc.rect(0, 291, W, 2, 'F');
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.5);
   doc.setTextColor(100, 120, 150);
-  doc.text('Peoples Property Management · City Gate Properties · Invoice automation powered by Noumena', W / 2, 291, { align: 'center' });
+  doc.text('Peoples Property Management · City Gate Properties · Invoice automation powered by Noumena', W / 2, 286, { align: 'center' });
 
   return doc;
 }
